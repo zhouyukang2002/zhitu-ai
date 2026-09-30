@@ -3,7 +3,7 @@
 // 用法: node scripts/perf-cost.mjs
 import { execFileSync } from 'node:child_process'
 
-const BASE = 'http://localhost:8080'
+const BASE = process.env.BASE_URL || 'http://localhost:8080'
 const MYSQL_USER = process.env.MYSQL_USERNAME || process.env.MYSQL_USER || 'root'
 const MYSQL_PASS = process.env.MYSQL_PASSWORD || '1234'
 const MYSQL_HOST = process.env.MYSQL_HOST || '127.0.0.1'
