@@ -4,7 +4,7 @@
 - **环境配置**：
   - Elasticsearch 8.15.0 (`:9200`)
   - tutor-mcp-server (`:8081`)
-  - tutor-engine 1.0.0 (`:8080`, Spring Boot 3.5.8 + DeepSeek-Chat)
+  - 编排引擎 backend 1.0.0 (`:8080`, Spring Boot 3.5.8 + DeepSeek-Chat)
   - frontend (`:5173`, Vue 3 + Vite)
 - **终验执行状态**：**全部测试项 100% 通过（PASS）**
 

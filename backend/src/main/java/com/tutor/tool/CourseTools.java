@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 课程查询工具（Function Calling 封装，原 tj-aigc CourseTools 的延续）：
+ * 课程查询工具（Function Calling 封装）：
  * 挂载到讲解/推荐智能体，LLM 可自动调用获取真实课程数据。
  * 工具白名单原则：只挂本领域工具，控制暴露面（防业务幻觉）。
  */

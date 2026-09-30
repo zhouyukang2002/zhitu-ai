@@ -106,7 +106,7 @@
 graph TD
     User([前端学员 / 管理后台]) <-->|SSE 流式 / RESTful| Gateway[前端交互层 Vue 3 / Vite]
 
-    subgraph 引擎编排与中枢 [tutor-engine]
+    subgraph 引擎编排与中枢 [backend 编排引擎]
         Gateway <--> EngineController[控制器 & 安全拦截网关]
         EngineController --> Router[三级意图路由 Router]
         Router -->|L0 快路径 <=25ms| FastPath[规则引擎 & 受控词典]
@@ -176,7 +176,7 @@ zhitu-ai/
 
 ### 1. 环境准备
 - **JDK 17+** 与 **Maven 3.8+**
-- **Node.js 18+** 与 **npm**
+- **Node.js 20+** 与 **npm**（构建工具要求 ≥20.19）
 - **Docker** 与 **Docker Compose** (推荐 Docker Desktop 或 Docker Engine 24+)
 
 ---

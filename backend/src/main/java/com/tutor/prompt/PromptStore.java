@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 提示词热更新（方案 B：本地文件监听 + AtomicReference 刷新）。
- * 替代原 tj-aigc 的 Nacos 配置中心：数据源从 Nacos 换成本地目录，
+ * 本地化配置中心：数据源为本地目录，
  * WatchService 监听变更、原子引用无锁刷新——复用原 SystemPromptConfig 的模式。
  *
  * 热更新边界（面试主动讲）：提示词与 Agent 参数可热更新；

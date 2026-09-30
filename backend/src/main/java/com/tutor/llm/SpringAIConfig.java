@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Spring AI 装配。
  *
- * 修复点（相对原 tj-aigc SpringAIConfig）：
+ * 配置要点：
  * 1. 去掉 defaultTools 重复注册 bug（原代码 .defaultTools(courseTools) 后又
  *    .defaultTools(courseTools, orderTools)，courseTools 注册了两次）；
  *    工具改为按智能体在调用点白名单挂载（工具最小暴露面，防业务幻觉）。
