@@ -11,7 +11,7 @@
 [![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.15-005571.svg)](https://www.elastic.co/)
 [![Tests](https://img.shields.io/badge/Tests-63%2F63%20Passing-success.svg)](docs/test-report.md)
 
-[English](./README_EN.md) · [简体中文](./README.md) · [测试报告](./docs/test-report.md) · [快速上手](#-5-分钟快速上手-quick-start) · [系统架构](#-系统架构全景) · [核心特性](#-核心工程特性)
+[测试报告](./docs/test-report.md) · [快速上手与配置指南](#-5-分钟快速上手与配置指南-quick-start) · [系统架构](#-系统架构全景) · [核心特性](#-核心工程特性)
 
 </div>
 
@@ -132,54 +132,133 @@ zhitu-ai/
 
 ---
 
-## ⚡ 5 分钟快速上手 (Quick Start)
+## ⚡ 5 分钟快速上手与配置指南 (Quick Start)
 
 ### 1. 环境准备
 - **JDK 17+** 与 **Maven 3.8+**
 - **Node.js 18+** 与 **npm**
-- **Docker** 与 **Docker Compose**
+- **Docker** 与 **Docker Compose** (推荐 Docker Desktop 或 Docker Engine 24+)
 
-### 2. 克隆仓库与配置密钥
-```bash
-git clone https://github.com/your-username/zhitu-ai.git
-cd zhitu-ai
+---
 
-# 复制环境变量模板
-cp .env.example .env
-```
-打开 `.env` 文件，配置你的大模型 API 密钥（如 DeepSeek 或阿里通义千问）：
+### 2. 配置项说明与密钥准备 (要配置什么？)
+
+系统的所有配置均支持通过环境变量或 `application.yml` 进行注入。在项目根目录下提供了一份完整的配置模板 `.env.example`。
+
+#### 2.1 配置项分级速查表
+
+| 配置梯队 | 环境变量 / 配置项 | 推荐值 / 默认值 | 作用与必填说明 |
+| :--- | :--- | :--- | :--- |
+| **第一梯队：核心必配**<br>*(不配无法调用大模型)* | `OPENAI_API_KEY` | *(无默认值，**必填**)* | **大语言模型 API Key**。默认推荐填入 **DeepSeek** API Key。 |
+| | `OPENAI_BASE_URL` | `https://api.deepseek.com` | 大模型 API 端点。若使用通义千问或 OpenAI 需对应修改。 |
+| | `OPENAI_CHAT_MODEL` | `deepseek-chat` | 主对话模型名称。 |
+| **第二梯队：RAG 检索增强**<br>*(可选，影响向量与重排)* | `EMBEDDING_API_KEY` | *(留空自动降级为 BM25)* | 阿里 DashScope（通义千问）Key，用于 1024 维密集向量检索 (`text-embedding-v3`)。 |
+| | `RERANK_API_KEY` | *(留空则按 RRF 原序)* | 阿里 DashScope Key，用于第二阶段 Cross-Encoder 重排 (`gte-rerank-v2`)。 |
+| **第三梯队：基础设施与拓扑**<br>*(开箱即用，Docker 无需改动)* | `MYSQL_HOST` / `PORT` | `127.0.0.1` / `3306` | MySQL 8.0 连接地址（用户 `root`，密码默认 `1234`，自动初始化两个库：`tutor_engine` 和 `tutor_biz`）。 |
+| | `REDIS_HOST` / `PORT` | `127.0.0.1` / `6379` | Redis 7.0 连接地址（用于分布式限流、会话槽位缓存与语义缓存）。 |
+| | `ES_HOST` / `PORT` | `127.0.0.1` / `9200` | Elasticsearch 8.15.0 连接地址（Docker 自动在线安装 `analysis-ik` 中文分词插件）。 |
+| | `MCP_SERVER_PORT` | `8081` | MCP 商业与题库微服务端口。 |
+| | `VITE_BACKEND_URL` | `http://127.0.0.1:8080` | 前端反向代理的主引擎端点。 |
+
+#### 2.2 生成并填写 `.env` 配置文件
+在项目根目录下复制模板：
+- **Linux / macOS**:
+  ```bash
+  cp .env.example .env
+  ```
+- **Windows (PowerShell)**:
+  ```powershell
+  Copy-Item .env.example .env
+  ```
+
+用编辑器打开 `.env` 文件，填入你的大模型 API 密钥（至少填入 `OPENAI_API_KEY`）：
 ```env
-OPENAI_API_KEY=sk-xxxxxxx          # 填入 DeepSeek API Key
-EMBEDDING_API_KEY=sk-xxxxxxx       # 填入 通义千问 DashScope Key (用于向量与重排)
+# 大语言模型配置 (必填：推荐填入 DeepSeek API Key)
+OPENAI_BASE_URL=https://api.deepseek.com
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_CHAT_MODEL=deepseek-chat
+
+# 向量检索与精排重排配置 (选填：若要体验 96% 召回的四阶混检 RAG 请填入通义千问 Key)
+EMBEDDING_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+RERANK_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
 ```
+
+---
 
 ### 3. 一键启动基础设施 (Docker)
-```bash
-cd docker
-docker-compose up -d
-```
-> 该命令会自动拉起 **Elasticsearch 8.15.0**（端口 9200）、**MySQL 8.0**（端口 3306，自动导入库表结构）和 **Redis 7.0**（端口 6379）。
 
-### 4. 启动后端核心服务
-启动 MCP 业务服务：
+在项目**根目录**下直接执行 Docker Compose 命令（统一管理 MySQL、Redis、Elasticsearch 容器）：
 ```bash
-cd ../mcp-server
+docker compose -f docker/docker-compose.yml up -d
+```
+> [!NOTE]
+> - 该命令会自动拉起 **MySQL 8.0**（端口 3306，自动导入 `docker/mysql/init/` 下的两个库建表脚本）、**Redis 7.0**（端口 6379）和 **Elasticsearch 8.15.0**（端口 9200）。
+> - **首次启动**时，Elasticsearch 容器会自动在线下载安装 `analysis-ik 8.15.0` 中文分词插件，请等待约 20~30 秒，确认容器就绪后即可继续下一步。
+
+---
+
+### 4. 启动后端核心微服务
+
+由于 Spring Boot 原生不会自动加载本地 `.env` 文件，请按以下任一方式**注入环境变量**后按序启动两组后端服务：
+
+> **微服务启动顺序说明**：请先启动 `mcp-server`（端口 8081），再启动 `backend`（端口 8080），因为主引擎启动与语料同步依赖 MCP 端点。
+
+#### 4.1 终端一：启动 MCP 业务与题库服务 (端口 8081)
+```bash
+cd mcp-server
 mvn spring-boot:run
 ```
 
-新开终端启动助教编排引擎：
-```bash
-cd ../backend
-mvn spring-boot:run
-```
+#### 4.2 终端二：启动助教主编排引擎 (端口 8080)
+* **方式 A（Linux / macOS 终端直接导出环境变量）**：
+  ```bash
+  cd backend
+  export $(grep -v '^#' ../.env | xargs) && mvn spring-boot:run
+  ```
+* **方式 B（Windows PowerShell 注入环境变量）**：
+  ```powershell
+  cd backend
+  Get-Content ../.env | Where-Object { $_ -notmatch '^#' -and $_.Trim() } | ForEach-Object { $k,$v = $_.Split('=',2); [System.Environment]::SetEnvironmentVariable($k.Trim(), $v.Trim(), 'Process') }
+  mvn spring-boot:run
+  ```
+* **方式 C（IntelliJ IDEA / VS Code 开发推荐）**：
+  在 IDE 中安装 **EnvFile** 插件，在运行配置中勾选加载项目根目录的 `.env` 文件直接点击运行；或直接在 `backend/src/main/resources/application.yml` 的 `spring.ai.openai.api-key` 处填入你的 Key。
 
-### 5. 启动前端界面
+---
+
+### 5. 启动前端界面 (端口 5173)
+
+另开终端，启动现代化 Vue 3 交互前端：
 ```bash
-cd ../frontend
+cd frontend
 npm install
 npm run dev
 ```
-打开浏览器访问：`http://localhost:5173` 即可开启沉浸式 AI 导学体验！
+
+---
+
+### 6. 核心激活动作：语料与知识库一键同步 (首次运行必做！)
+
+> [!IMPORTANT]
+> 刚完成数据库与 ES 初始化时，系统内尚未加载具体课程语料与私有题库。**首次启动后必须执行一次一键同步**，系统会自动扫描 `corpus/` 语料库、构建中文分词索引、计算向量切片、动态热加载受控词典并同步入库：
+
+* **方式 1 (界面一键点击·推荐)**：
+  打开浏览器访问研发与管理看板端：👉 `http://localhost:5173/admin.html`
+  点击页面顶部的 **【一键语料同步】** 按钮，等待 2 秒提示“语料与知识库热同步成功”即可。
+* **方式 2 (命令行极速触发)**：
+  在终端中直接执行：
+  ```bash
+  curl -X POST http://localhost:8080/api/admin/corpus/sync
+  ```
+
+---
+
+### 7. 双端访问入口
+
+* 🎓 **学员导学大厅**：`http://localhost:5173/`
+  体验苏格拉底启发式导学、防作弊答题卡、长对话认知复盘与智能选课。
+* 🛠️ **研发与知识库管理看板**：`http://localhost:5173/admin.html`
+  查看 APM 全链路 Trace 耗时与 Token 计费、知识库多格式切片解析（Word/PDF/MD）、RAG 质量三元组与语料热同步。
 
 ---
 
