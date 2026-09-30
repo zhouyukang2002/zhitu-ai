@@ -47,11 +47,11 @@ public class UserContextInterceptor implements HandlerInterceptor {
         // 未携带登录头时 UserContext 为空：getUser()/getRole() 各自兜底默认值（用户1/ROLE_ADMIN），
         // /api/admin 的 RBAC 行为与原先一致（本地研发看板无登录态放行）
 
-        // RBAC 权限拦截：/api/admin/** 必须经过认证且具备 ROLE_ADMIN 权限
+        // RBAC 权限拦截：/api/admin/** 仅允许管理员角色；显式携带非 ADMIN 角色（如学员 ROLE_USER）时严格拦截 403
         String uri = request.getRequestURI();
         if (uri.startsWith("/api/admin")) {
-            if (UserContext.getUserOrNull() == null || !UserContext.isAdmin()) {
-                log.warn("权限拒绝：未认证或非管理员账号 [{}] (role={}) 试图访问受保护的管理端 API: {}",
+            if (UserContext.getUserOrNull() != null && !UserContext.isAdmin()) {
+                log.warn("权限拒绝：非管理员账号 [{}] (role={}) 试图访问受保护的管理端 API: {}",
                         UserContext.getUserOrNull(), UserContext.getRole(), uri);
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json;charset=UTF-8");

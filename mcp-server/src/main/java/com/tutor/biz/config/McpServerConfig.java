@@ -13,13 +13,16 @@ import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 /**
  * MCP Server 装配：将四域工具（课程/题库/订单/工单）注册为标准 MCP 工具服务。
  * starter 自动在 /sse 与 /mcp/message 端点提供 JSON-RPC 2.0 协议，
  * 任何 MCP 宿主（Claude Desktop / MCP Inspector / 本项目 Agent）均可发现与调用。
  */
 @Configuration
-public class McpServerConfig {
+public class McpServerConfig implements WebMvcConfigurer {
 
     @Bean
     public ToolCallbackProvider bizToolCallbackProvider(CourseCatalogService catalog,
@@ -31,5 +34,15 @@ public class McpServerConfig {
                 .toolObjects(new CourseTools(catalog), new QuestionTools(questionBank),
                         new OrderTools(orderService), new TicketTools(ticketService))
                 .build();
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }

@@ -21,8 +21,15 @@ class CognitiveDiagnosisGoldenTest {
     private final CognitiveDiagnosis diagnosis = new CognitiveDiagnosis();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private static final File GOLDEN =
-            new File("scripts/eval-data/diagnosis-golden-40.json");
+    private static final File GOLDEN = resolveGoldenFile();
+
+    private static File resolveGoldenFile() {
+        File f = new File("scripts/eval-data/diagnosis-golden-40.json");
+        if (f.exists()) return f;
+        f = new File("backend/scripts/eval-data/diagnosis-golden-40.json");
+        if (f.exists()) return f;
+        return new File("scripts/eval-data/diagnosis-golden-40.json");
+    }
 
     private List<LearningRecordEntity> buildRecords(JsonNode records) {
         List<LearningRecordEntity> list = new ArrayList<>();
