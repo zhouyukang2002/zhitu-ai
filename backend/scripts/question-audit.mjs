@@ -7,9 +7,23 @@ import { execFileSync } from 'node:child_process'
 const DS_KEY = process.env.DEEPSEEK_API_KEY ?? process.env.DASHSCOPE_API_KEY ?? ''
 const PER_COURSE = 2
 
+const MYSQL_USER = process.env.MYSQL_USERNAME || process.env.MYSQL_USER || 'root'
+const MYSQL_PASS = process.env.MYSQL_PASSWORD || '1234'
+const MYSQL_HOST = process.env.MYSQL_HOST || '127.0.0.1'
+const MYSQL_PORT = process.env.MYSQL_PORT || '3306'
+
 function sql(q) {
-  return execFileSync('mysql', ['-uroot', '-p1234', '--default-character-set=utf8mb4', '--batch', '-e', q],
-    { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()
+  const args = [
+    `-u${MYSQL_USER}`,
+    `-p${MYSQL_PASS}`,
+    `-h${MYSQL_HOST}`,
+    `-P${MYSQL_PORT}`,
+    '--default-character-set=utf8mb4',
+    '--batch',
+    '-e',
+    q
+  ]
+  return execFileSync('mysql', args, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()
 }
 function parseTsv(tsv) {
   const lines = tsv.split('\n')

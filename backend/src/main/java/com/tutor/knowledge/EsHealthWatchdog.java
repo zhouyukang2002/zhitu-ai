@@ -63,17 +63,23 @@ public class EsHealthWatchdog {
         if (cn.hutool.core.util.StrUtil.isBlank(props.getEsHome())) {
             return;
         }
-        File esBat = new File(new File(props.getEsHome()), "bin/elasticsearch.bat");
-        if (!esBat.exists()) {
-            log.debug("[ES探活看门狗] 未在 tutor.es-home={} 下找到 elasticsearch.bat，跳过自动进程拉起", props.getEsHome());
+
+        boolean isWindows = System.getProperty("os.name", "").toLowerCase().contains("win");
+        File esExec = isWindows
+                ? new File(new File(props.getEsHome()), "bin/elasticsearch.bat")
+                : new File(new File(props.getEsHome()), "bin/elasticsearch");
+
+        if (!esExec.exists()) {
+            log.debug("[ES探活看门狗] 未在 tutor.es-home={} 下找到 ES 可执行文件，跳过自动进程拉起", props.getEsHome());
             return;
         }
 
         try {
-            log.info("🚀 [ES探活看门狗] 正在后台启动 Elasticsearch: {}", esBat.getAbsolutePath());
-            new ProcessBuilder("cmd.exe", "/c", esBat.getAbsolutePath())
-                    .directory(esBat.getParentFile())
-                    .start();
+            log.info("🚀 [ES探活看门狗] 正在后台启动 Elasticsearch: {}", esExec.getAbsolutePath());
+            ProcessBuilder pb = isWindows
+                    ? new ProcessBuilder("cmd.exe", "/c", esExec.getAbsolutePath())
+                    : new ProcessBuilder("/bin/sh", esExec.getAbsolutePath());
+            pb.directory(esExec.getParentFile()).start();
         } catch (Exception e) {
             log.error("❌ [ES探活看门狗] 自动拉起 Elasticsearch 失败: {}", e.getMessage());
         }

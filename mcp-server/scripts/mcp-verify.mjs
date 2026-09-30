@@ -40,12 +40,12 @@ const tools = listMsg?.result?.tools || []
 console.log(`tools/list: ${tools.length} 个工具`)
 tools.forEach(t => console.log(`  - ${t.name}`))
 
-await post({jsonrpc:'2.0', id:3, method:'tools/call', params:{name:'searchCourses', arguments:{keyword:'一元二次方程', maxPrice:500}}})
+await post({jsonrpc:'2.0', id:3, method:'tools/call', params:{name:'searchCourses', arguments:{keyword:'Java', maxPrice:500}}})
 const callMsg = await waitForId(3)
 const content = callMsg?.result?.content?.[0]?.text
 console.log(`searchCourses 调用: ${(content||'').slice(0, 200)}`)
 
-await post({jsonrpc:'2.0', id:4, method:'tools/call', params:{name:'getQuestions', arguments:{knowledgePoint:'一元二次方程', count:2}}})
+await post({jsonrpc:'2.0', id:4, method:'tools/call', params:{name:'getQuestions', arguments:{knowledgePoint:'集合框架', count:2}}})
 const qMsg = await waitForId(4)
 const qText = qMsg?.result?.content?.[0]?.text || ''
 console.log(`getQuestions 泄题检查: ${qText.includes('"answer"') || qText.includes('"reference"') ? '❌ 答案泄漏' : '✅ 无答案字段'}`)

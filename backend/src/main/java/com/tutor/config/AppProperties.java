@@ -19,6 +19,39 @@ public class AppProperties {
     /** 本机 Elasticsearch 安装根目录（探活看门狗自动拉起用；相对路径默认值便于跨机器部署） */
     private String esHome = "../elasticsearch-8.15.0";
 
+    public String getPromptDir() {
+        if (new java.io.File(promptDir).exists()) {
+            return promptDir;
+        }
+        if (new java.io.File("./backend/config/prompts").exists()) {
+            return "./backend/config/prompts";
+        }
+        return promptDir;
+    }
+
+    public String getDataDir() {
+        if (new java.io.File(dataDir).exists()) {
+            return dataDir;
+        }
+        if (new java.io.File("./backend/data").exists()) {
+            return "./backend/data";
+        }
+        return dataDir;
+    }
+
+    public String getCorpusDir() {
+        if (new java.io.File(corpusDir).exists()) {
+            return corpusDir;
+        }
+        if (new java.io.File("./corpus").exists()) {
+            return "./corpus";
+        }
+        if (new java.io.File("../corpus").exists()) {
+            return "../corpus";
+        }
+        return corpusDir;
+    }
+
     private Ai ai = new Ai();
 
     @Data

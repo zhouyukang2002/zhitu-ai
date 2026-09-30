@@ -18,7 +18,7 @@ npm run dev        # 启动 Vite 开发服务器 (:5173)，自动代理到后端
 | `看看我的学情报告` | 生成学情报告卡片 |
 | `推荐几门课程` / 诊断卡上的「看看配套课程」 | 课程推荐（旁路交易域） |
 | 点课程卡片「购买」/ `我要买《课程名》` | 预下单 → 订单卡片 → 确认支付（幂等） |
-| 模糊购买（如 `我想买个数学课`） | 返回候选列表让你选，**不擅自下单** |
+| 模糊购买（如 `我想买个Java课`） | 返回候选列表让你选，**不擅自下单** |
 | 其他任意消息 | 普通对话回复 |
 
 答题后点击「提交答案」体验批改（选择题规则判分、简答题模拟 LLM 评分 + 错误归因；同 `exerciseId` 重复提交幂等返回）。
@@ -48,15 +48,11 @@ frontend/
 │  ├─ stores/chat.js      # 组合式 API 轻量全局状态（不引入 Pinia）
 │  ├─ styles/             # tokens.css(设计令牌) + base.css(主题覆写)
 │  └─ components/
-   ├─ api/                # request / chat(SSE) / session(REST)
-   ├─ stores/chat.js      # 组合式 API 轻量全局状态（不引入 Pinia）
-   ├─ styles/             # tokens.css(设计令牌) + base.css(主题覆写)
-   └─ components/
-      ├─ Sidebar.vue      # 会话列表（macOS 风格选中态）
-      ├─ ChatArea.vue     # 消息流 + SSE 跟随滚动 + 输入区
-      ├─ StatusPanel.vue  # 状态机步骤条 + 学情摘要
-      ├─ common/MarkdownView.vue   # marked + highlight.js + DOMPurify
-      └─ messages/        # 10 种消息卡片 + type 分发器（含交易域 course_list/course_order）
+│     ├─ Sidebar.vue      # 会话列表（macOS 风格选中态）
+│     ├─ ChatArea.vue     # 消息流 + SSE 跟随滚动 + 输入区
+│     ├─ StatusPanel.vue  # 状态机步骤条 + 学情摘要
+│     ├─ common/MarkdownView.vue   # marked + highlight.js + DOMPurify
+│     └─ messages/        # 10 种消息卡片 + type 分发器（含交易域 course_list/course_order）
 ```
 
 ## 实现要点（面试讲点）

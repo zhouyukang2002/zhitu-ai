@@ -9,8 +9,8 @@ services:
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "${ES_PORT:-9200}:9200"
+      - "${ES_TCP_PORT:-9300}:9300"
     entrypoint: >
       sh -c "if [ ! -d '/usr/share/elasticsearch/plugins/analysis-ik' ]; then
         echo '>>> Installing IK Analysis plugin for ES 8.15.0...';
@@ -27,10 +27,10 @@ services:
     image: mysql:8.0
     container_name: zhitu-mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD:-1234}
       - TZ=Asia/Shanghai
     ports:
-      - "3306:3306"
+      - "${MYSQL_PORT:-3306}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
@@ -45,7 +45,7 @@ services:
     image: redis:7.0-alpine
     container_name: zhitu-redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     networks:

@@ -24,7 +24,7 @@ jobs:
       - name: Compile & Run Unit Tests
         run: |
           mvn test-compile
-          mvn test -Dtest=SkillDictionaryDynamicTest,SlotsTest,IntentRouterFixTest
+          mvn test
 
   frontend-build:
     name: Frontend Build & Typecheck (Node 18)
