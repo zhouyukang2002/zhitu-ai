@@ -11,8 +11,15 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    entrypoint: >
+      sh -c "if [ ! -d '/usr/share/elasticsearch/plugins/analysis-ik' ]; then
+        echo '>>> Installing IK Analysis plugin for ES 8.15.0...';
+        bin/elasticsearch-plugin install --batch https://release.infinilabs.com/analysis-ik/elasticsearch/analysis-ik-8.15.0.zip;
+      fi;
+      /usr/local/bin/docker-entrypoint.sh elasticsearch"
     volumes:
       - es_data:/usr/share/elasticsearch/data
+      - es_plugins:/usr/share/elasticsearch/plugins
     networks:
       - zhitu-network
 
@@ -46,6 +53,7 @@ services:
 
 volumes:
   es_data:
+  es_plugins:
   mysql_data:
   redis_data:
 

@@ -1,11 +1,9 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 // VITE_USE_MOCK=true  → /api 代理到本地 Mock 服务 (localhost:3001)
 // VITE_USE_MOCK=false → /api 代理到真实后端 (localhost:8080)
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
-  const useMock = env.VITE_USE_MOCK !== 'false'
+export default defineConfig(() => {
   return {
     plugins: [vue()],
     server: {
@@ -13,7 +11,7 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       proxy: {
         '/api': {
-          target: useMock ? 'http://127.0.0.1:3001' : 'http://127.0.0.1:8080',
+          target: 'http://127.0.0.1:8080',
           changeOrigin: true,
         },
       },
