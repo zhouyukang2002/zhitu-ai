@@ -19,10 +19,32 @@
 
 ## 🌟 项目简介 (Overview)
 
-**智途 AI (Zhitu-AI)** 是一套面向计算机与技术转码学员的**工业级多智能体 AI 助教与教学导学系统**。
-与市面上常见的大模型“单 Agent 提示词套壳”不同，智途 AI 采用**编排中枢 + 11 个专业业务智能体**的协同拓扑，真正实现了**“测评摸底 $\rightarrow$ 定制规划 $\rightarrow$ 启发导学 $\rightarrow$ 密封组卷 $\rightarrow$ 智能批改 $\rightarrow$ 全局复盘”**的全业务闭环。
+**智途 AI（Zhitu-AI）** 是一套面向**成人职业教育与技术转码人群**的多智能体 AI 助教系统：学员说出目标（"我想转行做 Java 开发"），系统自动完成**学情摸底 → 路径规划 → 启发式讲解 → 出题批改 → 课程推荐与下单 → 阶段复盘**的完整教学闭环。
 
-系统创新性地实现了**“语料源驱动的零代码学科扩展机制”**——添加一门新学科无需修改任何一行 Java 或前端代码，仅需放置纯 Markdown 语料，系统即可自动热入库并激活推荐、RAG 教学、双轨出题与预下单全功能。
+它不是提示词 Demo，而是一套按生产标准构建的教学系统工程：
+
+- **多智能体编排**：编排中枢调度 11 个业务智能体（诊断 / 规划 / 讲解 / 出题 / 批改 / 推荐等），单轮单次 LLM 联合输出意图、槽位与执行计划，规则快路径 + 三层兜底，DAG 并行调度无依赖环节；
+- **语料源驱动的零代码扩展**：新增一门课程不需要改一行代码——放入 Markdown 语料，词典热更新、语义检索、双轨出题与推荐全链路自动激活；
+- **评测门禁**：63 项核心用例（含 40 组安全对抗样本）集成 CI，评测不过不合入；
+- **全链路可观测**：Trace 逐节点落库、对话可回放、规则 + LLM Judge + 用户反馈三路加权评估。
+
+一句话：**把"LLM 能当家教"做成可测试、可扩展、可观测的工程系统。**
+
+---
+
+## 📸 系统预览 (Screenshots)
+
+![智途 AI · 学员交互端](docs/images/hero.png)
+
+| 多智能体教学闭环（规划 + 课程推荐） | 研发看板 · APM 指标总览 |
+|---|---|
+| ![](docs/images/chat-plan.png) | ![](docs/images/apm-overview.png) |
+| **三路加权批量评估**（规则 + LLM Judge + 用户反馈） | **知识库全生命周期治理**（ES 8.x + 语义缓存） |
+| ![](docs/images/apm-eval.png) | ![](docs/images/apm-knowledge.png) |
+
+![全链路追踪 · 路由来源 / Token / 成本 / 耗时](docs/images/apm-trace.png)
+
+> 更多截图与逐用例验证结论见 [测试报告](docs/test-report.md)。
 
 ---
 
@@ -50,6 +72,7 @@
 - **四阶检索流水线**：`全文 BM25 + 1024 维 Dense 密集向量 + RRF 倒数排名融合 + Cross-Encoder (GTE-Rerank) 语义重排`，Recall@5 达到 **$96\%$**；
 - **多格式文档解析**：支持 Web 端拖拽解析 Word (`.docx`)、PDF (`.pdf`) 与 Markdown 结构化章节切片并注入面包屑；
 - **知识冲突与相似预警**：前置冲突检测算法，上传相左条款时弹出 `conflictAlert` 红色预警；
+- **引用溯源**：回答中的知识点标注来源文档与切片标题，答案可验证、可排查，压制幻觉；
 - **Redis 语义缓存**：高频相似问题命中缓存秒级返回（$\le 80\text{ms}$）。
 
 ### 5. 🛡️ 工业级安全防御与全链路容灾
@@ -58,6 +81,23 @@
 - **连续降级转人工（`HUMAN_HANDOFF`）**：连续 3 次异常自动触发工单流转，保障兜底体验；
 - **全链路 APM 可观测**：每次对话记录完整 Trace/Span 耗时与 Token 计费，闭环驱动模型评估。
 
+### 6. 🧪 全链路评测体系 (Eval-Driven)
+> 行业共识：约 93% 的 Agent 项目死于上线前没有评测体系。本项目随包开源 **12 个评测脚本 + 6 个评测数据集**（`backend/scripts/`），评测不通过不允许合入：
+- **六大数据集随包开源**：意图 200 题 / 课程语义召回 150 例 / 诊断金标准 40 组 / RAG 检索 100 例 / 多轮剧本 20 个 / 安全对抗 40 条，全部可一键复跑；
+- **诊断金标准断言**：正确率 × 效率修正双因子排序断言，40 组全命中；
+- **三路加权评估**：规则 + LLM Judge + 用户反馈加权出百分制基线（低分样本自动回流驱动迭代）；
+- **RAGAS 口径忠实度审计**：回答论断被检索证据支持的比例逐例打分，量化幻觉水平。
+
+### 7. 🧠 分层记忆与个性化
+- **短期滑动窗口**：Redis 会话记忆，超限自动摘要压缩（`MemoryCompactionService`），长对话 prompt 不膨胀；
+- **跨会话长期画像**：学员背景与薄弱点沉淀为记忆条目，新会话向量召回，隔天续聊无缝衔接；
+- **槽位跨轮合并**：当前轮槽位与历史槽位智能合并，"再来一组""换个知识点"零重复描述。
+
+### 8. 🔐 MCP 工具级数据权限（双工程架构）
+- **业务与智能体解耦**：`mcp-server` 独立工程模拟课程 / 题库 / 订单 / 工单 4 域业务系统，主引擎经 MCP 协议（`spring-ai-starter-mcp-client`）调用工具；
+- **数据权限在工具层拦截**：私有题库按（用户，课程）购课关系校验，**未购内容不进入模型上下文**——Prompt 注入无法绕过（工具层不信任模型）；
+- **交易域旁路**：预下单 / 支付幂等独立于教学状态机，购课不打断做题现场。
+
 ---
 
 ## 🏗️ 系统架构全景 (Architecture)
@@ -65,13 +105,13 @@
 ```mermaid
 graph TD
     User([前端学员 / 管理后台]) <-->|SSE 流式 / RESTful| Gateway[前端交互层 Vue 3 / Vite]
-    
+
     subgraph 引擎编排与中枢 [tutor-engine]
         Gateway <--> EngineController[控制器 & 安全拦截网关]
         EngineController --> Router[三级意图路由 Router]
         Router -->|L0 快路径 <=25ms| FastPath[规则引擎 & 受控词典]
         Router -->|L2 互证决策| L2LLM[轻量意图判别]
-        
+
         Router --> Orchestrator[智能体调度中枢 DAG]
         Orchestrator --> Clarify[澄清 ClarifyAgent]
         Orchestrator --> Diagnose[诊断 DiagnoseAgent]
@@ -91,7 +131,7 @@ graph TD
         RAG <--> ES[(Elasticsearch 8.15 / IK)]
         RAG <--> Vector[(DashScope 向量化 / 重排)]
         RAG <--> SemanticCache[(Redis 语义缓存)]
-        
+
         Recommend & Order <--> MCP[tutor-mcp-server]
         MCP <--> MySQL[(MySQL 业务库 tutor_biz)]
         EngineController <--> LocalMySQL[(MySQL 引擎库 tutor_engine)]
@@ -294,3 +334,4 @@ node scripts/safety-eval.mjs
 ## 📄 开源许可证 (License)
 
 本项目基于 [Apache License 2.0](LICENSE) 协议开源。可免费商用与二次开发。
+

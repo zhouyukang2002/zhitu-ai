@@ -14,7 +14,7 @@
               <span class="name">TUTOR APM</span>
               <span class="badge-pro">ENTERPRISE</span>
             </div>
-            <div class="sub">智能助教引擎 · 研发可观测与质量大盘</div>
+            <div class="sub">智途 AI · 研发可观测与质量大盘</div>
           </div>
         </div>
 

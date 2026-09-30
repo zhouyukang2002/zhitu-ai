@@ -8,7 +8,7 @@
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#0969da" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <h1 class="brand-title">智能助教引擎</h1>
+        <h1 class="brand-title">智途 AI</h1>
         <p class="brand-subtitle">职业技术与技能提升 · 多智能体自适应学习助教系统</p>
       </div>
 

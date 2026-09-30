@@ -85,7 +85,7 @@ public class CourseRecommendAgent {
                 String promptTpl = promptStore.get(PromptStore.RECOMMEND);
                 if (promptTpl == null || promptTpl.isBlank()) {
                     promptTpl = """
-                            你是智能助教引擎的职业课程规划与推荐智能体。结合学员目标与技术薄弱点，从候选课程中生成个性化推荐方案。
+                            你是智途 AI 的职业课程规划与推荐智能体。结合学员目标与技术薄弱点，从候选课程中生成个性化推荐方案。
                             只输出 JSON，不要输出其他内容。
                             学员目标与基础：{weakPoints}
                             候选课程（courseId:名称:价格）：

@@ -9,7 +9,7 @@
         </svg>
       </div>
       <div class="brand-text">
-        <div class="name">智能助教引擎</div>
+        <div class="name">智途 AI</div>
         <div class="slogan">AI Teaching Assistant</div>
       </div>
     </div>

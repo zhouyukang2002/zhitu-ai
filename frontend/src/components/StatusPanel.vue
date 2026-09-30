@@ -23,13 +23,12 @@
 
     <!-- 2. 主滚动工作区（平滑无痕隐形滚动） -->
     <div class="panel-scroll-body">
-      <!-- 知识脉络导航面包屑 -->
+      <!-- 知识脉络导航面包屑（随会话主题动态生成） -->
       <div class="breadcrumb-bar">
-        <span class="bc-item">Java 体系</span>
-        <span class="bc-sep">/</span>
-        <span class="bc-item">核心架构</span>
-        <span class="bc-sep">/</span>
-        <span class="bc-item active">{{ activeTopicLabel }}</span>
+        <template v-for="(item, idx) in breadcrumbItems" :key="idx">
+          <span v-if="idx > 0" class="bc-sep">/</span>
+          <span class="bc-item" :class="{ active: idx === breadcrumbItems.length - 1 }">{{ item }}</span>
+        </template>
       </div>
 
       <!-- 核心板块一：动态随堂考点闪卡 (Live Knowledge Flashcard) -->
@@ -254,13 +253,12 @@ const BADGE_MAP = {
 const badgeLabel = computed(() => BADGE_MAP[state.sessionState?.state]?.label || '就绪')
 const badgeClass  = computed(() => BADGE_MAP[state.sessionState?.state]?.cls || 'badge-blue')
 
-// ---------- 知识面包屑 ----------
-const activeTopicLabel = computed(() => {
-  const tags = currentTags.value
-  if (tags && tags.length) {
-    return tags[0].replace('#', '')
-  }
-  return '智能伴学'
+// ---------- 知识面包屑（从会话真实主题标签生成，无硬编码领域词） ----------
+const breadcrumbItems = computed(() => {
+  const tags = (currentTags.value || []).map(t => t.replace('#', ''))
+  if (tags.length >= 2) return [tags[1], tags[0]]
+  if (tags.length === 1) return ['全学科伴学', tags[0]]
+  return ['全学科伴学', '智能伴学']
 })
 
 // ---------- 动态随堂考点闪卡 (Flashcard) ----------

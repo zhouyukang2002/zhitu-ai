@@ -294,7 +294,7 @@ public class KnowledgeManageService {
      * RAG 质量指标大盘数据。
      * 数据来源：scripts/rag-eval.mjs（101 例检索评测，含重排 A/B）与 scripts/ragas-eval.mjs
      * （34 例 LLM Judge 四件套）的实测结果——大盘数字必须可复现，禁止写占位估值误导排查。
-     * 实测明细见《智能助教引擎测评报告》。
+     * 实测明细见仓库 docs/test-report.md 与 backend/scripts/ 评测套件。
      */
     public Map<String, Object> getRagMetrics() {
         Map<String, Object> m = new LinkedHashMap<>();
