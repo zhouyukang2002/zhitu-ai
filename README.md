@@ -9,9 +9,9 @@
 [![Spring AI](https://img.shields.io/badge/Spring%20AI-1.0.0--M6-blueviolet.svg)](https://spring.io/projects/spring-ai)
 [![Vue](https://img.shields.io/badge/Vue.js-3.x-4FC08D.svg)](https://vuejs.org/)
 [![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.15-005571.svg)](https://www.elastic.co/)
-[![Tests](https://img.shields.io/badge/Tests-100%25%20Passing-success.svg)](docs/test-report.md)
+[![Tests](https://img.shields.io/badge/Tests-63%2F63%20Passing-success.svg)](docs/test-report.md)
 
-[English](./README_EN.md) · [简体中文](./README.md) · [快速上手](#-5-分钟快速上手-quick-start) · [系统架构](#-系统架构全景) · [核心特性](#-核心工程特性)
+[简体中文](./README.md) · [测试报告](./docs/test-report.md) · [快速上手](#-5-分钟快速上手-quick-start) · [系统架构](#-系统架构全景) · [核心特性](#-核心工程特性)
 
 </div>
 
@@ -20,7 +20,7 @@
 ## 🌟 项目简介 (Overview)
 
 **智途 AI (Zhitu-AI)** 是一套面向计算机与技术转码学员的**工业级多智能体 AI 助教与教学导学系统**。
-与市面上常见的大模型“单 Agent 提示词套壳”不同，智途 AI 采用**编排中枢 + 11 个专业业务智能体**的协同拓扑，真正实现了**“测评摸底 $\rightarrow$ 定制规划 $\rightarrow$ 启发导学 $\rightarrow$ 加密组卷 $\rightarrow$ 智能批改 $\rightarrow$ 全局复盘”**的全业务闭环。
+与市面上常见的大模型“单 Agent 提示词套壳”不同，智途 AI 采用**编排中枢 + 11 个专业业务智能体**的协同拓扑，真正实现了**“测评摸底 $\rightarrow$ 定制规划 $\rightarrow$ 启发导学 $\rightarrow$ 密封组卷 $\rightarrow$ 智能批改 $\rightarrow$ 全局复盘”**的全业务闭环。
 
 系统创新性地实现了**“语料源驱动的零代码学科扩展机制”**——添加一门新学科无需修改任何一行 Java 或前端代码，仅需放置纯 Markdown 语料，系统即可自动热入库并激活推荐、RAG 教学、双轨出题与预下单全功能。
 
@@ -31,7 +31,7 @@
 ### 1. 🤖 编排中枢与 11 智能体拓扑
 - **三级意图路由网络**：
   - **L0 规则快路径**：强特征零歧义请求（如“出3道多线程选择题”）免 LLM 极速短路，时延 $\le 25\text{ms}$；
-  - **L2 轻量模型决策**：综合研判开放意图，支持跨轮槽位继承与受控词典强约束，综合识别准确率 **$98.2\%$**；
+  - **L2 轻量模型决策**：综合研判开放意图，支持跨轮槽位继承与受控词典强约束（意图评测 200 题脚本与数据集见 `docs/test-report.md`）；
   - **歧义否决机制**：设置解题探讨否决词，防止答题探讨被误判为重新出题。
 - **单轮单次 LLM 联合决策**：单次调用联合输出意图、七维槽位与编排计划，节省 60% 冗余网络耗时与 Token 消耗；
 - **状态机与 DAG 并行调度**：严控教学状态流转，引入 Critic 质检机制防止大模型幻觉。
@@ -43,7 +43,7 @@
 
 ### 3. 💡 苏格拉底导学与教学防作弊
 - **启发式交互答疑**：肯定学员工程直觉，采用反问启发学员自行发现单线程与并发、版本迭代差异（如经典的“七段八桶”口诀）；
-- **答案加密密封机制**：下发答题卡时在报文级**绝对剥离 `answer` 与 `explanation`**，服务端随卷加密存储，作答后由批改智能体判分揭晓，杜绝前端抓包作弊；
+- **答案密封下发机制**：下发答题卡时在报文级**绝对剥离 `answer` 与 `explanation`**，答案键仅存服务端随卷关联，作答后由批改智能体判分揭晓，杜绝前端抓包作弊；
 - **多轮全局动态复盘**：会话收尾时提炼认知主线思维导图与三大盲区钉牢，输出针对性学习路线图，首字延迟（TTFT）压至亚秒级（$903\text{ms}$）。
 
 ### 4. 🔍 工业级混合 RAG 检索管线
