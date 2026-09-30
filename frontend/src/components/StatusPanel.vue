@@ -333,39 +333,70 @@ const activeFlashcard = computed(() => {
   }
 })
 
-// ---------- 聚焦主题标签云 ----------
-const CANDIDATE_KEYWORDS = [
-  'HashMap', 'ConcurrentHashMap', '红黑树', 'AVL树', '扩容机制',
-  '多线程', '并发安全', '线程池', 'CAS', 'synchronized', 'AQS',
-  'JVM', '垃圾回收', '双亲委派', 'Spring', 'SpringBoot', 'IOC', 'AOP',
-  'MySQL', 'B+树索引', '事务隔离', 'MVCC', 'Redis', '分布式锁', '缓存击穿',
-  'Go', 'Goroutine', 'Channel', 'GMP调度', 'Python', 'Docker', 'Kubernetes',
-  '两数之和', '链表反转'
-]
+// ---------- 动态萃取会话聚焦主题标签云（100% 零硬编码） ----------
+const STOP_WORDS = new Set([
+  'true', 'false', 'null', 'undefined', 'string', 'number', 'boolean', 'text', 'return',
+  'const', 'let', 'var', 'class', 'public', 'private', 'void', 'static', 'final',
+  'import', 'from', 'package', 'module', 'exports', 'function', 'async', 'await'
+])
 
 const currentTags = computed(() => {
   const found = new Set()
+
+  // 1. 优先从认知诊断薄弱点萃取（真实学情数据源）
   if (state.sessionState?.weakPoints) {
     for (const w of state.sessionState.weakPoints) {
-      if (w.knowledgePoint) found.add('#' + w.knowledgePoint)
+      if (w.knowledgePoint && w.knowledgePoint.trim()) {
+        found.add('#' + w.knowledgePoint.trim())
+      }
     }
   }
+
   const msgs = currentMessages.value || []
-  const recentText = msgs.slice(-6).map(m => {
-    if (typeof m.content === 'string') return m.content
-    return m.content?.text || JSON.stringify(m.content || {})
-  }).join(' ')
 
-  for (const kw of CANDIDATE_KEYWORDS) {
-    if (recentText.includes(kw)) {
-      found.add('#' + kw)
-      if (found.size >= 4) break
+  // 2. 从消息卡片（agent_trace、exercise、diagnosis）中动态提取明确考点
+  for (let i = msgs.length - 1; i >= 0 && found.size < 4; i--) {
+    const m = msgs[i]
+    // 2.1 练习题卡片中的 kp
+    if (m.type === 'exercise' && m.content) {
+      if (m.content.questions && Array.isArray(m.content.questions)) {
+        for (const q of m.content.questions) {
+          if (q.kp && q.kp.trim()) found.add('#' + q.kp.trim())
+        }
+      }
+      const tipMatch = m.content.tip?.match(/「([^」]+)」/)
+      if (tipMatch) found.add('#' + tipMatch[1].trim())
+    }
+    // 2.2 agent_trace 中的步骤抽取
+    if (m.type === 'agent_trace' && m.content?.steps) {
+      for (const st of m.content.steps) {
+        const actionMatch = st.action?.match(/(?:知识点|考点|考查|探讨)[「“"']?([^」”"'\s,，。]+)[」”"']?/)
+        if (actionMatch) found.add('#' + actionMatch[1].trim())
+      }
     }
   }
 
-  if (found.size === 0) {
-    return []
+  // 3. 从最近对话文本中动态提取代码专有名词（反引号包裹的技术实体，如 `Goroutine`、`Span`、`HashMap`）
+  if (found.size < 4) {
+    const recentMsgs = msgs.slice(-4)
+    for (let i = recentMsgs.length - 1; i >= 0 && found.size < 4; i--) {
+      const m = recentMsgs[i]
+      const text = typeof m.content === 'string' ? m.content : (m.content?.text || '')
+      if (!text) continue
+
+      // 正则提取反引号包裹的技术实体
+      const codeMatches = text.match(/`([A-Za-z0-9_\u4e00-\u9fa5\.\-\+]{2,24})`/g) || []
+      for (const raw of codeMatches) {
+        const entity = raw.replace(/`/g, '').trim()
+        // 过滤语法停用词、纯数字及过短符号
+        if (!STOP_WORDS.has(entity.toLowerCase()) && !/^\d+$/.test(entity) && entity.length >= 2) {
+          found.add('#' + entity)
+          if (found.size >= 4) break
+        }
+      }
+    }
   }
+
   return Array.from(found).slice(0, 4)
 })
 

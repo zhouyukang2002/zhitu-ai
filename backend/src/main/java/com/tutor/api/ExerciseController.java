@@ -29,6 +29,7 @@ public class ExerciseController {
     private final com.tutor.exercise.ExerciseService exerciseService;
     private final com.tutor.conversation.MessageService messageService;
     private final com.tutor.conversation.ConversationService conversationService;
+    private final com.tutor.learning.SessionStateService stateService;
 
     @PostMapping("/submit")
     public Result<SubmitRequest.SubmitResponse> submit(@RequestBody SubmitRequest req) {
@@ -49,11 +50,20 @@ public class ExerciseController {
         conversationService.requireOwned(sessionId, UserContext.getUser());
 
         String questionId = body.getOrDefault("questionId", "");
-        String kp = body.getOrDefault("kp", "JavaSE 基础");
+        String rawKp = body.get("kp");
         String errorType = body.getOrDefault("errorType", "技术概念混淆");
         String stem = body.getOrDefault("stem", "");
 
         com.tutor.client.QuestionBankClient.Question origin = questionBank.byId(questionId);
+        String kp = (rawKp != null && !rawKp.isBlank()) ? rawKp : (origin != null ? origin.getKp() : null);
+        if (kp == null || kp.isBlank()) {
+            var slots = stateService.loadSlots(sessionId);
+            if (slots != null && slots.knowledgePoint() != null) {
+                kp = slots.knowledgePoint();
+            } else {
+                kp = "综合考点";
+            }
+        }
         if (origin == null) {
             origin = new com.tutor.client.QuestionBankClient.Question();
             origin.setId(questionId);
