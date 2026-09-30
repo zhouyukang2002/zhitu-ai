@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: tutor-mcp-server
+  ai:
+    mcp:
+      server:
+        name: tutor-biz-server
+        version: 1.0.0
+        type: SYNC
+        capabilities:
+          tool: true
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:3306/tutor_biz?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:1234}
+
+tutor:
+  biz:
+    data-dir: ./data

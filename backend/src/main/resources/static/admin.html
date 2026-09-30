@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>智能助教引擎 · 研发看板</title>
+<style>
+  body { font-family: -apple-system, "PingFang SC", sans-serif; margin: 0; background: #f5f5f7; color: #1d1d1f; }
+  header { padding: 14px 24px; background: #fff; border-bottom: 1px solid #e5e5e7; display: flex; gap: 18px; align-items: baseline; }
+  h1 { font-size: 17px; margin: 0; }
+  nav button { margin-right: 8px; padding: 6px 14px; border: none; border-radius: 980px; background: #e8e8ed; cursor: pointer; font-size: 13px; }
+  nav button.active { background: #0071e3; color: #fff; }
+  main { padding: 20px 24px; max-width: 1080px; margin: 0 auto; }
+  .cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 18px; }
+  .card { background: #fff; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .card b { display: block; font-size: 22px; margin-top: 4px; }
+  .card span { font-size: 12px; color: #6e6e73; }
+  section { display: none; }
+  section.active { display: block; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+  th, td { padding: 9px 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #f0f0f2; }
+  th { background: #fafafa; color: #6e6e73; font-weight: 500; }
+  tr:hover td { background: #f7f9ff; cursor: pointer; }
+  pre { background: #1d1d1f; color: #e8e8ed; padding: 12px; border-radius: 10px; font-size: 12px; overflow: auto; max-height: 320px; white-space: pre-wrap; }
+  .tag { padding: 2px 8px; border-radius: 980px; font-size: 11px; }
+  .success { background: #e8f7ee; color: #1d8a4e; } .degraded { background: #fff4e5; color: #b25e09; } .failed { background: #fdeaea; color: #c0392b; }
+  .btn { padding: 6px 14px; border: none; border-radius: 980px; background: #0071e3; color: #fff; cursor: pointer; font-size: 13px; }
+  input, select { padding: 6px 10px; border: 1px solid #d2d2d7; border-radius: 8px; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>智能助教引擎 · 研发看板</h1>
+  <nav>
+    <button class="active" data-tab="overview">指标总览</button>
+    <button data-tab="traces">链路追踪</button>
+    <button data-tab="eval">批量评估</button>
+  </nav>
+</header>
+<main>
+  <section id="overview" class="active">
+    <div class="cards" id="metricCards"></div>
+    <table id="routingTable"><thead><tr><th>路由来源</th><th>请求数</th></tr></thead><tbody></tbody></table>
+  </section>
+  <section id="traces">
+    <div style="margin-bottom:12px">
+      <input id="fSession" placeholder="会话ID（可选）" style="width:220px">
+      <select id="fStatus"><option value="">全部状态</option><option>success</option><option>degraded</option><option>failed</option></select>
+      <button class="btn" onclick="loadTraces()">查询</button>
+    </div>
+    <table id="traceTable"><thead><tr><th>Trace</th><th>会话</th><th>消息</th><th>意图</th><th>来源</th><th>Token</th><th>成本¥</th><th>耗时</th><th>状态</th><th>标注</th></tr></thead><tbody></tbody></table>
+    <div id="traceDetail" style="margin-top:16px"></div>
+  </section>
+  <section id="eval">
+    <div style="margin-bottom:12px">
+      起止：<input id="evalDays" type="number" value="7" style="width:60px"> 天内
+      <label><input type="checkbox" id="evalJudge" checked> 启用 LLM Judge</label>
+      <button class="btn" onclick="runEval()">运行批量评估</button>
+      <span id="evalStatus" style="font-size:12px;color:#6e6e73"></span>
+    </div>
+    <div id="evalReport"></div>
+    <h3 style="font-size:15px;margin:18px 0 8px">历次评估报告</h3>
+    <table id="evalHistoryTable"><thead><tr><th>#</th><th>评估窗口</th><th>样本数</th><th>已标注</th><th>平均分</th><th>LLM Judge</th><th>生成时间</th></tr></thead><tbody></tbody></table>
+  </section>
+</main>
+<script>
+const G = p => fetch(p).then(r => r.json()).then(j => j.data)
+const P = (p, b) => fetch(p, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(b||{})}).then(r => r.json())
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav button, section').forEach(x => x.classList.remove('active'))
+  b.classList.add('active'); document.getElementById(b.dataset.tab).classList.add('active')
+  if (b.dataset.tab === 'overview') loadMetrics()
+  if (b.dataset.tab === 'traces') loadTraces()
+  if (b.dataset.tab === 'eval') loadEvalHistory()
+})
+async function loadMetrics() {
+  const d = await G('/api/admin/metrics')
+  document.getElementById('metricCards').innerHTML = [
+    ['请求数', d.requests], ['输入Token', d.promptTokens], ['输出Token', d.completionTokens],
+    ['成本¥', d.cost], ['平均耗时', d.avgLatencyMs + 'ms'], ['降级率', (d.degradedRate*100) + '%']
+  ].map(([k, v]) => `<div class="card"><span>${k}</span><b>${v}</b></div>`).join('')
+  document.querySelector('#routingTable tbody').innerHTML =
+    Object.entries(d.routing || {}).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')
+}
+async function loadTraces() {
+  const qs = new URLSearchParams({sessionId: fSession.value, status: fStatus.value, page: 1, size: 50})
+  const d = await G('/api/admin/traces?' + qs)
+  document.querySelector('#traceTable tbody').innerHTML = (d.items || []).map(t => `
+    <tr onclick="showTrace('${t.id}')">
+      <td>${t.id}</td><td>${t.sessionId}</td><td>${(t.message||'').slice(0,18)}</td>
+      <td>${t.intent||''}</td><td>${t.routeSource||''}</td>
+      <td>${(t.promptTokens||0)}+${(t.completionTokens||0)}</td><td>${t.cost??0}</td>
+      <td>${t.latencyMs}ms</td><td><span class="tag ${t.status}">${t.status}</span></td>
+      <td>${t.expectedIntent ? '已标注' : '-'}</td>
+    </tr>`).join('')
+}
+async function showTrace(id) {
+  const d = await G('/api/admin/trace/' + id)
+  const waterfall = d.observations.map(o =>
+    `<div style="display:flex;gap:8px;padding:4px 0;font-size:12.5px">
+       <span style="width:150px">${o.name}</span>
+       <span style="width:90px">${o.latencyMs}ms</span>
+       <span style="width:80px"><span class="tag ${o.status}">${o.status}</span></span>
+       <span style="flex:1">${o.tool || o.model || ''}</span>
+     </div>`).join('')
+  document.getElementById('traceDetail').innerHTML = `
+    <h3 style="font-size:15px">Trace ${d.trace.id} · 评分标注</h3>
+    <div style="margin:8px 0">
+      期望意图 <input id="lblIntent" value="${d.trace.expectedIntent || ''}" placeholder="DIAGNOSE/PLAN/...">
+      <button class="btn" onclick="saveLabel('${id}')">保存标注</button>
+      <button class="btn" style="background:#1d8a4e" onclick="feedback('${id}',1)">👍</button>
+      <button class="btn" style="background:#8e8e93" onclick="feedback('${id}',-1)">👎</button>
+    </div>
+    <div style="background:#fff;border-radius:12px;padding:12px;margin-bottom:10px">${waterfall}</div>
+    ${d.observations.filter(o => o.output).map(o => `<details><summary style="cursor:pointer;font-size:13px">${o.name} 输出</summary><pre>${(o.output||'').replace(/</g,'&lt;')}</pre></details>`).join('')}`
+}
+async function saveLabel(id) {
+  await P(`/api/admin/trace/${id}/label`, {expectedIntent: document.getElementById('lblIntent').value})
+  alert('标注已保存')
+}
+async function feedback(id, rating) {
+  await P('/api/admin/feedback', {traceId: id, rating})
+  alert('反馈已记录')
+}
+async function runEval() {
+  evalStatus.textContent = '评估中（含 LLM Judge 会较慢）...'
+  const days = parseInt(evalDays.value || 7)
+  const end = new Date().toISOString()
+  const start = new Date(Date.now() - days * 86400000).toISOString()
+  const d = await P('/api/admin/eval', {startAt: start, endAt: end, includeJudge: evalJudge.checked})
+  evalStatus.textContent = `完成：${d.data.count} 条 Trace，平均分 ${d.data.avgScore}`
+  document.getElementById('evalReport').innerHTML = `
+    <pre>${JSON.stringify({平均分: d.data.avgScore, 样本数: d.data.count, 已标注: d.data.labeledCount, 指标均值: d.data.metricAverages, 低分样本: d.data.lowScoreSamples}, null, 2)}</pre>`
+  loadEvalHistory()
+}
+async function loadEvalHistory() {
+  const items = await G('/api/admin/eval/history')
+  document.querySelector('#evalHistoryTable tbody').innerHTML = (items || []).map(r => `
+    <tr><td>${r.id}</td><td style="font-size:12px">${r.startAt.slice(0,16)} ~ ${r.endAt.slice(11,16)}</td>
+    <td>${r.traceCount}</td><td>${r.labeledCount}</td><td><b>${r.avgScore}</b></td>
+    <td>${r.includeJudge ? '✓' : '—'}</td><td style="font-size:12px">${String(r.createdAt).slice(0,19)}</td></tr>`).join('')
+    || '<tr><td colspan="7" style="color:#6e6e73">暂无落库报告，先运行一次批量评估</td></tr>'
+}
+loadMetrics()
+</script>
+</body>
+</html>

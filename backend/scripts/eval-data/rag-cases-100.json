@@ -1,0 +1,409 @@
+[
+ {
+  "q": "Java 面向对象的三大特性是什么",
+  "expectTitle": "面向对象"
+ },
+ {
+  "q": "switch 和 if-else 怎么选",
+  "expectTitle": "流程控制"
+ },
+ {
+  "q": "方法重载和参数传递的规则",
+  "expectTitle": "方法与数组"
+ },
+ {
+  "q": "JDK 安装和环境变量怎么配",
+  "expectTitle": "开发环境"
+ },
+ {
+  "q": "数组遍历和方法调用的基础写法",
+  "expectTitle": "方法与数组"
+ },
+ {
+  "q": "for 循环和 while 循环的区别",
+  "expectTitle": "流程控制"
+ },
+ {
+  "q": "封装继承多态怎么理解",
+  "expectTitle": "面向对象"
+ },
+ {
+  "q": "Java 入门要装什么工具",
+  "expectTitle": "开发环境"
+ },
+ {
+  "q": "异常捕获 try-catch 的用法",
+  "expectTitle": "异常处理"
+ },
+ {
+  "q": "HashMap 和 ArrayList 的区别",
+  "expectTitle": "集合框架"
+ },
+ {
+  "q": "泛型的作用是什么",
+  "expectTitle": "泛型"
+ },
+ {
+  "q": "多线程怎么创建和启动",
+  "expectTitle": "多线程"
+ },
+ {
+  "q": "IO 流读写文件的方式",
+  "expectTitle": "IO 流"
+ },
+ {
+  "q": "线程安全和锁的概念",
+  "expectTitle": "多线程"
+ },
+ {
+  "q": "集合类的继承体系",
+  "expectTitle": "集合框架"
+ },
+ {
+  "q": "List Set Map 各自的特点",
+  "expectTitle": "集合框架"
+ },
+ {
+  "q": "类型擦除是什么",
+  "expectTitle": "泛型"
+ },
+ {
+  "q": "文件输入输出流怎么用",
+  "expectTitle": "IO 流"
+ },
+ {
+  "q": "NullPointerException 怎么处理",
+  "expectTitle": "异常处理"
+ },
+ {
+  "q": "JDBC 连接数据库的步骤",
+  "expectTitle": "JDBC"
+ },
+ {
+  "q": "数据库连接池的作用",
+  "expectTitle": "连接池"
+ },
+ {
+  "q": "MyBatis 的 mapper 怎么写",
+  "expectTitle": "MyBatis"
+ },
+ {
+  "q": "动态 SQL 的 if 和 where 标签",
+  "expectTitle": "动态 SQL"
+ },
+ {
+  "q": "一对多关联查询怎么配置",
+  "expectTitle": "关联映射与分页"
+ },
+ {
+  "q": "SQL 的增删改查语法",
+  "expectTitle": "SQL 基础"
+ },
+ {
+  "q": "B+ 树索引的原理",
+  "expectTitle": "MySQL 索引"
+ },
+ {
+  "q": "事务的隔离级别有哪些",
+  "expectTitle": "事务与锁"
+ },
+ {
+  "q": "表结构设计的范式",
+  "expectTitle": "数据库设计"
+ },
+ {
+  "q": "慢 SQL 怎么优化",
+  "expectTitle": "查询优化"
+ },
+ {
+  "q": "行锁和表锁的区别",
+  "expectTitle": "事务与锁"
+ },
+ {
+  "q": "HTTP 请求的完整流程",
+  "expectTitle": "HTTP 与 Servlet"
+ },
+ {
+  "q": "Servlet 的生命周期",
+  "expectTitle": "HTTP 与 Servlet"
+ },
+ {
+  "q": "SpringMVC 的 DispatcherServlet 工作原理",
+  "expectTitle": "Spring MVC"
+ },
+ {
+  "q": "RESTful 接口的设计规范",
+  "expectTitle": "RESTful API"
+ },
+ {
+  "q": "Session 和 Cookie 的区别",
+  "expectTitle": "会话与 Cookie"
+ },
+ {
+  "q": "MVC 三层架构怎么分层",
+  "expectTitle": "MVC 分层"
+ },
+ {
+  "q": "转发和重定向的区别",
+  "expectTitle": "Spring MVC"
+ },
+ {
+  "q": "GET 和 POST 的使用场景",
+  "expectTitle": "RESTful API"
+ },
+ {
+  "q": "单例 Bean 是线程安全的吗",
+  "expectTitle": "Spring MVC"
+ },
+ {
+  "q": "接口返回状态码怎么设计",
+  "expectTitle": "RESTful API"
+ },
+ {
+  "q": "前端和后端各自要掌握什么技能",
+  "expectKp": "前端开发工程师"
+ },
+ {
+  "q": "数据分析师的职业要求是什么",
+  "expectKp": "数据分析师"
+ },
+ {
+  "q": "测试工程师需要学什么",
+  "expectKp": "测试工程师"
+ },
+ {
+  "q": "运维工程师的日常职责",
+  "expectKp": "运维/DevOps 工程师"
+ },
+ {
+  "q": "产品经理的核心能力",
+  "expectKp": "产品经理"
+ },
+ {
+  "q": "算法工程师岗位要求",
+  "expectKp": "算法工程师"
+ },
+ {
+  "q": "想做提示词相关岗位要会什么",
+  "expectKp": "提示词工程师"
+ },
+ {
+  "q": "大模型应用工程师是做什么的",
+  "expectKp": "大模型应用工程师"
+ },
+ {
+  "q": "Java 后端工程师的能力模型",
+  "expectKp": "Java 后端工程师"
+ },
+ {
+  "q": "DBA 这个岗位怎么样",
+  "expectKp": "DBA"
+ },
+ {
+  "q": "测试转 Java 后端怎么规划",
+  "expectKp": "测试工程师转型 Java 后端路径"
+ },
+ {
+  "q": "后端想加 AI 技能怎么学",
+  "expectKp": "后端工程师补充 AI 应用能力路径"
+ },
+ {
+  "q": "全栈工程师要会哪些技术栈",
+  "expectKp": "全栈工程师"
+ },
+ {
+  "q": "转行简历里 AI 能力怎么写",
+  "expectKp": "后端工程师补充 AI 应用能力路径"
+ },
+ {
+  "q": "新媒体运营的岗位前景",
+  "expectKp": "新媒体运营"
+ },
+ {
+  "q": "跨境电商和国内电商运营的区别",
+  "expectKp": "跨境电商运营"
+ },
+ {
+  "q": "交了钱想退课怎么办",
+  "expectTitle": "退款与退费政策"
+ },
+ {
+  "q": "课程能延期或者换班吗",
+  "expectTitle": "调课与延期规范"
+ },
+ {
+  "cat": "s",
+  "q": "买了课之后有人辅导答疑吗",
+  "expectTitle": "VIP 伴学答疑服务"
+ },
+ {
+  "q": "交完学费后悔了能不能退",
+  "expectTitle": "退款与退费政策"
+ },
+ {
+  "q": "工作太忙跟不上进度可以调课吗",
+  "expectTitle": "调课与延期规范"
+ },
+ {
+  "q": "买课后遇到问题找谁",
+  "expectTitle": "VIP 伴学答疑服务"
+ },
+ {
+  "q": "想换个时间上课行不行",
+  "expectTitle": "调课与延期规范"
+ },
+ {
+  "q": "什么时候能申请退费",
+  "expectTitle": "退款与退费政策"
+ },
+ {
+  "q": "有老师带着学吗还是纯看录播",
+  "expectTitle": "VIP 伴学答疑服务"
+ },
+ {
+  "q": "课程有效期过了还能补课吗",
+  "expectTitle": "调课与延期规范"
+ },
+ {
+  "q": "课程服务包含答疑吗",
+  "expectTitle": "VIP 伴学答疑服务"
+ },
+ {
+  "q": "退款流程走多久到账",
+  "expectTitle": "退款与退费政策"
+ },
+ {
+  "q": "职场新人怎么做好向上汇报和时间管理",
+  "expectTitle": "职场通用力"
+ },
+ {
+  "q": "项目延期风险怎么管理",
+  "expectTitle": "项目管理"
+ },
+ {
+  "q": "和同事发生冲突怎么处理",
+  "expectTitle": "职场通用力"
+ },
+ {
+  "q": "做项目怎么排期和跟进",
+  "expectTitle": "项目管理"
+ },
+ {
+  "q": "职场沟通和协作能力怎么提升",
+  "expectTitle": "职场通用力"
+ },
+ {
+  "q": "项目经理的核心职责是什么",
+  "expectTitle": "项目管理"
+ },
+ {
+  "q": "我想系统了解 Java 这门语言入门要学什么：从环境搭建、基础语法到流程控制和方法数组的完整学习内容",
+  "expectTitle": "开发环境"
+ },
+ {
+  "q": "数据库这块从 SQL 语法开始，然后索引原理、事务隔离、表设计到慢查询优化，整体应该按什么顺序掌握",
+  "expectTitle": "SQL 基础"
+ },
+ {
+  "q": "Web 开发里用户登录状态保持的几种方案对比，Cookie Session Token 各自的适用场景",
+  "expectTitle": "会话与 Cookie"
+ },
+ {
+  "q": "请给我讲一下 Spring 框架里 MVC 模式的请求分发流程，从前端请求进入到视图渲染返回的完整链路",
+  "expectTitle": "Spring MVC"
+ },
+ {
+  "q": "我是一名手工测试想转开发，听说 Java 后端是常见路线，请给我完整的转型学习路径建议",
+  "expectTitle": "测试工程师转型 Java 后端路径"
+ },
+ {
+  "q": "老板让我调研要不要引入 AI 客服，我需要了解这类系统的典型架构、检索问答能力和上线评估方法",
+  "expectKp": "后端工程师补充 AI 应用能力路径"
+ },
+ {
+  "q": "准备去面试 Java 后端岗位，想了解企业对这个岗位的技术要求、项目经验和软素质的完整画像",
+  "expectTitle": "Java 后端工程师岗位画像"
+ },
+ {
+  "q": "在数据库里两个事务同时修改同一条数据会发生什么，数据库是怎么保证一致性的",
+  "expectTitle": "事务与锁"
+ },
+ {
+  "q": "我写的 Java 程序占用内存越来越高，想了解内存区域划分和回收机制来定位问题",
+  "expectTitle": "垃圾回收",
+  "expectKp": "JavaSE 基础"
+ },
+ {
+  "q": "商品库存扣减在超卖场景下怎么处理，需要缓存、消息队列和数据库层面的整套方案",
+  "expectKp": "MySQL 索引"
+ },
+ {
+  "q": "公司要做一个内部知识库搜索，希望既能搜精确关键词又能搜同义表述，技术方案怎么选",
+  "expectKp": "大模型应用工程师"
+ },
+ {
+  "q": "java 里怎么把一个字符串转成数字",
+  "expectTitle": "方法与数组"
+ },
+ {
+  "q": "代码报错了看不懂怎么办",
+  "expectTitle": "异常处理"
+ },
+ {
+  "q": "sql 里 group by 之后怎么筛选",
+  "expectTitle": "SQL 基础"
+ },
+ {
+  "q": "接口超时了怎么排查",
+  "expectTitle": "查询优化"
+ },
+ {
+  "q": "数组越界是什么错误",
+  "expectTitle": "异常处理"
+ },
+ {
+  "q": "什么时候用消息队列",
+  "expectTitle": "多线程",
+  "expectKp": "集合框架"
+ },
+ {
+  "q": "接口路径用动词还是名词",
+  "expectTitle": "RESTful API"
+ },
+ {
+  "q": "索引建多了会有什么坏处",
+  "expectTitle": "MySQL 索引"
+ },
+ {
+  "q": "对象在内存里占多少空间",
+  "expectTitle": "JavaSE 基础"
+ },
+ {
+  "q": "想了解设计相关岗位都有哪些方向",
+  "expectKp": "UI/UX 设计师"
+ },
+ {
+  "q": "做财务能转数据分析吗",
+  "expectKp": "财务会计"
+ },
+ {
+  "q": "运营岗位分哪些种类",
+  "expectKp": "新媒体运营"
+ },
+ {
+  "q": "想学习怎么和人打交道、管理自己的时间",
+  "expectTitle": "职场通用力"
+ },
+ {
+  "q": "零基础转行学习过程中坚持不下去怎么办，有什么方法论",
+  "expectTitle": "职场通用力"
+ },
+ {
+  "q": "产品经理面试常问的案例分析题怎么准备",
+  "expectKp": "产品经理"
+ },
+ {
+  "q": "数据岗位的求职准备和面试要点",
+  "expectKp": "数据分析师"
+ }
+]

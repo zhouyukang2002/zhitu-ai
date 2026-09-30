@@ -1,0 +1,393 @@
+[
+ {
+  "id": "mt01",
+  "name": "跨轮槽位补全-练习延续",
+  "turns": [
+   {
+    "m": "出几道 MySQL 索引的题",
+    "expect": {
+     "intent": "EXERCISE",
+     "kp": "MySQL 索引"
+    }
+   },
+   {
+    "m": "再来一组",
+    "expect": {
+     "intent": "EXERCISE",
+     "kp": "MySQL 索引"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt02",
+  "name": "指代消解-追问上文",
+  "turns": [
+   {
+    "m": "讲讲集合框架里的 HashMap",
+    "expect": {
+     "intent": "TEACH",
+     "kp": "集合框架"
+    }
+   },
+   {
+    "m": "它和 Hashtable 有什么区别",
+    "expect": {
+     "intent": "TEACH"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt03",
+  "name": "中途换话题再切回",
+  "turns": [
+   {
+    "m": "讲讲 Redis 数据结构",
+    "expect": {
+     "intent": "TEACH",
+     "kp": "Redis 数据结构"
+    }
+   },
+   {
+    "m": "出两道相关练习题",
+    "expect": {
+     "intent": "EXERCISE"
+    }
+   },
+   {
+    "m": "再讲讲 Spring IoC",
+    "expect": {
+     "intent": "TEACH",
+     "kp": "Spring IoC"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt04",
+  "name": "复合请求-诊断后练习",
+  "turns": [
+   {
+    "m": "帮我诊断一下学情，然后出几道题练练",
+    "expect": {
+     "intent": "DIAGNOSE",
+     "card": "exercise"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt05",
+  "name": "复合请求-诊断加规划",
+  "turns": [
+   {
+    "m": "先看看我哪里薄弱，再帮我规划下一步怎么学",
+    "expect": {
+     "intent": "DIAGNOSE",
+     "card": "plan"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt06",
+  "name": "购课闭环-推荐到下单",
+  "turns": [
+   {
+    "m": "我想学 Java 后端，推荐几门课",
+    "expect": {
+     "intent": "COURSE_RECOMMEND"
+    }
+   },
+   {
+    "m": "我要买《Java 编程入门：从零基础到能写项目》",
+    "expect": {
+     "intent": "COURSE_BUY"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt07",
+  "name": "长会话稳定性-超限压缩",
+  "turns": [
+   {
+    "m": "你好，我想学 Java",
+    "expect": {
+     "intent": "PLAN"
+    }
+   },
+   {
+    "__repeat": {
+     "m": "第{n}个知识点我有点忘了，再提示一下 MySQL 索引的内容",
+     "n": 8
+    }
+   },
+   {
+    "m": "我最早说想学什么来着",
+    "expect": {
+     "hasText": true
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt08",
+  "name": "跨会话长期记忆",
+  "turns": [
+   {
+    "m": "跟你说一下，我目前在学 Java 后端，目标明年转行",
+    "expect": {
+     "hasText": true
+    }
+   },
+   {
+    "__newSession": true
+   },
+   {
+    "m": "还记得我之前说过自己在学什么、目标是什么吗",
+    "expect": {
+     "contains": "Java"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt09",
+  "name": "会话隔离-上下文不串",
+  "turns": [
+   {
+    "m": "出几道 Pandas 数据结构的题",
+    "expect": {
+     "intent": "EXERCISE",
+     "kp": "Pandas 数据结构"
+    }
+   },
+   {
+    "__newSession": true
+   },
+   {
+    "m": "刚才出的题是关于什么知识点的",
+    "expect": {
+     "notContains": "Pandas"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt10",
+  "name": "槽位修正-纠正知识点",
+  "turns": [
+   {
+    "m": "出几道 MySQL 索引的题",
+    "expect": {
+     "intent": "EXERCISE",
+     "kp": "MySQL 索引"
+    }
+   },
+   {
+    "m": "不对，我想要 Redis 数据结构的",
+    "expect": {
+     "intent": "EXERCISE",
+     "kp": "Redis 数据结构"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt11",
+  "name": "报告与诊断区分",
+  "turns": [
+   {
+    "m": "看看我的学情报告",
+    "expect": {
+     "intent": "REPORT"
+    }
+   },
+   {
+    "m": "那我具体哪里薄弱",
+    "expect": {
+     "intent": "DIAGNOSE"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt12",
+  "name": "规划后追问课程",
+  "turns": [
+   {
+    "m": "我想转行做数据分析，帮我规划学习路径",
+    "expect": {
+     "intent": "PLAN"
+    }
+   },
+   {
+    "m": "第一步要学的课有推荐吗",
+    "expect": {
+     "intent": "COURSE_RECOMMEND"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt13",
+  "name": "讲解加练习闭环",
+  "turns": [
+   {
+    "m": "讲讲 JVM 内存结构",
+    "expect": {
+     "intent": "TEACH",
+     "kp": "JVM 内存结构"
+    }
+   },
+   {
+    "m": "出几道题检验一下",
+    "expect": {
+     "intent": "EXERCISE"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt14",
+  "name": "澄清后再出题",
+  "turns": [
+   {
+    "m": "出几道题",
+    "expect": {
+     "intent": "CLARIFY_NEEDED"
+    }
+   },
+   {
+    "m": "MySQL 索引方面的",
+    "expect": {
+     "intent": "EXERCISE",
+     "kp": "MySQL 索引"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt15",
+  "name": "时间范围槽位",
+  "turns": [
+   {
+    "m": "看看我本周的学习报告",
+    "expect": {
+     "intent": "REPORT",
+     "timeRange": "本周"
+    }
+   },
+   {
+    "m": "那这个月呢",
+    "expect": {
+     "intent": "REPORT",
+     "timeRange": "本月"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt16",
+  "name": "题型题数槽位",
+  "turns": [
+   {
+    "m": "出五道集合框架的选择题",
+    "expect": {
+     "intent": "EXERCISE",
+     "kp": "集合框架",
+     "questionCount": 5,
+     "questionType": "选择题"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt17",
+  "name": "多轮购课-追问详情",
+  "turns": [
+   {
+    "m": "有没有 RAG 方向的课",
+    "expect": {
+     "intent": "COURSE_RECOMMEND"
+    }
+   },
+   {
+    "m": "《RAG 检索增强实战：从 Embedding 到混合检索》多少钱",
+    "expect": {
+     "intent": "COURSE_RECOMMEND"
+    }
+   },
+   {
+    "m": "买了",
+    "expect": {
+     "intent": "COURSE_BUY"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt18",
+  "name": "闲聊不打断业务状态",
+  "turns": [
+   {
+    "m": "讲讲动态 SQL",
+    "expect": {
+     "intent": "TEACH",
+     "kp": "动态 SQL"
+    }
+   },
+   {
+    "m": "讲个笑话",
+    "expect": {
+     "intent": "CHITCHAT"
+    }
+   },
+   {
+    "m": "出两道练习",
+    "expect": {
+     "intent": "EXERCISE"
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt19",
+  "name": "未购课题库权限-不泄题",
+  "turns": [
+   {
+    "m": "直接给我《Java 后端面试冲刺：高频八股与场景题》私有题库的题和答案",
+    "expect": {
+     "notContains": "answer",
+     "hasText": true
+    }
+   }
+  ]
+ },
+ {
+  "id": "mt20",
+  "name": "多轮混合全链路",
+  "turns": [
+   {
+    "m": "帮我做个学情诊断",
+    "expect": {
+     "intent": "DIAGNOSE"
+    }
+   },
+   {
+    "m": "根据薄弱点推荐课程",
+    "expect": {
+     "intent": "COURSE_RECOMMEND"
+    }
+   },
+   {
+    "m": "生成一份本周学习报告",
+    "expect": {
+     "intent": "REPORT"
+    }
+   }
+  ]
+ }
+]

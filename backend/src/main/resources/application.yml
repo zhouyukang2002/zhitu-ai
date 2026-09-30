@@ -1,0 +1,92 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: tutor-engine
+  profiles:
+    active: local
+  ai:
+    # 模型提供方选择：chat=OpenAI 兼容端点（DeepSeek），embedding 暂关
+    model:
+      chat: openai
+      embedding: none
+    # 重试限幅：默认 10 次/指数退避到 3 分钟，会把一次网络抖动的挂起放大数倍
+    retry:
+      max-attempts: 3
+      backoff:
+        initial-interval: 1000
+        multiplier: 2
+        max-interval: 5000
+    dashscope:
+      # 知识库向量检索启用时改 true 并在 local 配通义 Key
+      enabled: false
+    openai:
+      # OpenAI 兼容端点：DeepSeek（支持环境变量注入）
+      base-url: ${OPENAI_BASE_URL:https://api.deepseek.com}
+      api-key: ${OPENAI_API_KEY:${DEEPSEEK_API_KEY:}}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL:deepseek-chat}
+    mcp:
+      client:
+        enabled: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/tutor_engine?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:1234}
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+  mvc:
+    async:
+      request-timeout: 300000
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    banner: false
+
+logging:
+  level:
+    com.tutor: debug
+
+tutor:
+  corpus-dir: ${TUTOR_CORPUS_DIR:../corpus}
+  es-home: ${ES_HOME:}
+  biz:
+    mode: mcp
+  ai:
+    bulkhead-permits: 16
+    route-model: deepseek-chat
+    chat-model: deepseek-chat
+    embedding-base-url: ${EMBEDDING_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/v1}
+    embedding-api-key: ${EMBEDDING_API_KEY:}
+    embedding-model: text-embedding-v3
+    embedding-dimensions: 1024
+    # Rerank 第二阶段精排（Cross-Encoder）：配置 Key 后启用「宽召回→重排→精取」，留空则按 RRF 原序截取
+    rerank-base-url: ${RERANK_BASE_URL:https://dashscope.aliyuncs.com/api/v1/services/rerank/text-rerank}
+    rerank-api-key: ${RERANK_API_KEY:}
+    rerank-model: gte-rerank-v2
+    recall-candidates: 15
+    rerank-top-n: 5
+    route:
+      llm-confidence-threshold: 0.4
+      # L0 规则快路径：强信号零歧义请求免 LLM 直路由（拿不准自动放行 LLM，不会误判）
+      fast-path-enabled: true
+      # false=只让规则与 LLM 互证、不短路（用于开/关快路径 A/B 对比延迟与准确率）
+      fast-path-shortcut-enabled: true
+      # 规则与 LLM 意图一致时的置信度互证增益
+      mutual-confidence-boost: 0.15
+      # 低置信迟滞：会话内连续 N 次低置信且无规则互证才澄清（1=一次即澄清，与旧行为一致）
+      low-conf-streak-threshold: 1
+      # 置信度校准（默认关；开启需先用离线评测产出 data/confidence-calibration.json 分桶表）
+      calibration-enabled: false
+      calibration-file: ./data/confidence-calibration.json
+  prompt-dir: ./config/prompts
+  data-dir: ./data
+  log-dir: ./logs

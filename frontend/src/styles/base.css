@@ -1,0 +1,343 @@
+/* ============ 全局基础样式 + Element Plus 苹果化主题覆写 ============ */
+@import './tokens.css';
+
+:root {
+  /* Element Plus 主题变量 → 苹果化 */
+  --el-color-primary: var(--blue);
+  --el-color-primary-light-3: #4c9df0;
+  --el-color-primary-light-5: #7fb9f4;
+  --el-color-primary-light-7: #b3d6f8;
+  --el-color-primary-light-8: #cce3fa;
+  --el-color-primary-light-9: var(--blue-soft);
+  --el-color-primary-dark-2: var(--blue-active);
+  --el-color-success: var(--green);
+  --el-color-warning: var(--orange);
+  --el-color-danger: var(--red);
+  --el-color-error: var(--red);
+  --el-border-radius-base: 10px;
+  --el-border-color: var(--hairline);
+  --el-border-color-light: var(--hairline);
+  --el-border-color-lighter: var(--hairline);
+  --el-text-color-primary: var(--text-1);
+  --el-text-color-regular: var(--text-2);
+  --el-text-color-secondary: var(--text-3);
+  --el-fill-color-blank: var(--surface);
+  --el-fill-color-light: var(--bg);
+  --el-font-family: var(--font-family);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: var(--text-1);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.28);
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- 通用卡片 ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-normal) var(--ease-spring),
+              box-shadow var(--duration-normal) var(--ease-spring);
+}
+
+/* 卡片标题行（各消息卡片通用） */
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 11px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--hairline);
+}
+.card-head .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+.card-head .card-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  flex: none;
+}
+.card-head .title {
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+}
+.card-head .subtitle {
+  font-size: 11.5px;
+  color: var(--text-3);
+  margin-left: auto;
+  font-weight: 400;
+}
+
+/* ---------- Markdown 区域 ---------- */
+.md {
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--text-1);
+  word-break: break-word;
+}
+.md > :first-child {
+  margin-top: 0;
+}
+.md > :last-child {
+  margin-bottom: 0;
+}
+.md h1,
+.md h2,
+.md h3,
+.md h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 1.2em 0 0.5em;
+  line-height: 1.4;
+}
+.md h1 { font-size: 1.35em; }
+.md h2 { font-size: 1.2em; }
+.md h3 { font-size: 1.08em; }
+.md p {
+  margin: 0.65em 0;
+}
+.md ul,
+.md ol {
+  padding-left: 1.4em;
+  margin: 0.5em 0;
+}
+.md li {
+  margin: 0.25em 0;
+}
+.md blockquote {
+  margin: 0.8em 0;
+  padding: 2px 14px;
+  border-left: 3px solid var(--blue);
+  color: var(--text-2);
+  background: var(--surface-2);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+/* 行内代码样式：清爽浅蓝微边框 */
+.md :not(pre) > code,
+.md > code {
+  font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: rgba(9, 105, 218, 0.06);
+  color: #0969da;
+  padding: 0.16em 0.45em;
+  margin: 0 0.15em;
+  border-radius: 5px;
+  border: 1px solid rgba(9, 105, 218, 0.15);
+  font-weight: 500;
+}
+
+/* 优雅现代浅色代码块卡片 (IDE / GitHub / Claude 风格) */
+.md .code-wrapper {
+  margin: 14px 0;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f8fafc;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.md .code-wrapper:hover {
+  border-color: rgba(9, 105, 218, 0.25);
+  box-shadow: 0 2px 8px rgba(9, 105, 218, 0.06);
+}
+
+.md .code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #f1f5f9;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  user-select: none;
+}
+
+.md .code-dots {
+  display: flex;
+  align-items: center;
+  gap: 5.5px;
+}
+
+.md .code-dots .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.md .code-dots .dot.red { background: #ff5f56; }
+.md .code-dots .dot.yellow { background: #ffbd2e; }
+.md .code-dots .dot.green { background: #27c93f; }
+
+.md .code-lang {
+  font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.md .code-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2.5px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.md .code-copy-btn:hover {
+  color: var(--blue, #0969da);
+  border-color: rgba(9, 105, 218, 0.35);
+  background: #f0f7ff;
+}
+
+.md .code-copy-btn.copied {
+  color: #10b981;
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.md pre {
+  margin: 0;
+  padding: 14px 16px;
+  background: #f8fafc;
+  color: #1e293b;
+  overflow-x: auto;
+  line-height: 1.65;
+  border: none;
+  font-size: 13.5px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(9, 105, 218, 0.2) transparent;
+}
+
+.md pre::-webkit-scrollbar {
+  height: 5px;
+}
+
+.md pre::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.md pre code {
+  background: transparent;
+  padding: 0;
+  font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+  font-size: inherit;
+  color: #1e293b;
+}
+.md table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.8em 0;
+  font-size: 13.5px;
+}
+.md th,
+.md td {
+  border: 0.5px solid var(--hairline);
+  padding: 7px 12px;
+  text-align: left;
+}
+.md th {
+  background: var(--surface-2);
+  font-weight: 600;
+}
+.md hr {
+  border: none;
+  border-top: 0.5px solid var(--hairline);
+  margin: 1em 0;
+}
+.md a {
+  color: var(--blue);
+  text-decoration: none;
+}
+.md a:hover {
+  text-decoration: underline;
+}
+.md strong {
+  font-weight: 600;
+}
+
+/* ---------- Element Plus 细节苹果化 ---------- */
+.el-button {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.el-button--primary:not(.is-disabled) {
+  --el-button-hover-bg-color: var(--blue-hover);
+  --el-button-active-bg-color: var(--blue-active);
+}
+.el-button.is-round {
+  border-radius: 980px;
+}
+.el-tag {
+  border-radius: 980px;
+  border: none;
+  font-weight: 500;
+}
+.el-collapse {
+  --el-collapse-border-color: var(--hairline);
+}
+.el-collapse-item__header {
+  font-weight: 500;
+  font-size: 13px;
+}
+.el-textarea__inner {
+  border-radius: var(--radius-md);
+}
+.el-progress-bar__outer {
+  background: rgba(0, 0, 0, 0.06);
+}

@@ -1,0 +1,21 @@
+# 复制本文件为 application-local.yml 并填入真实 Key（该文件已 gitignore）
+spring:
+  ai:
+    openai:
+      api-key: sk-xxxx   # DeepSeek 平台申请（对话/意图识别/查询改写）
+    # 启用 Spring AI DashScope 自动装配时（可选）使用
+    dashscope:
+      api-key: sk-xxxx   # 可选：通义千令 DashScope Key
+
+tutor:
+  ai:
+    # 向量化（混合检索的向量召回）：OpenAI 兼容 Embedding 端点，推荐 DashScope text-embedding-v3
+    embedding-api-key: sk-xxxx
+    # Rerank 第二阶段精排（可选）：配置后启用「宽召回→Cross-Encoder 重排→精取」；
+    # 留空则按 RRF 融合原序截取，RAG 链路不受影响。DashScope 与 Embedding 可用同一个 Key
+    rerank-api-key: sk-xxxx
+    route:
+      # 低置信迟滞：设为 2 表示会话内连续 2 次低置信才澄清（减少阈值抖动导致的反复追问）
+      low-conf-streak-threshold: 1
+      # 置信度校准（需先用离线评测产出 data/confidence-calibration.json，再置 true）
+      calibration-enabled: false

@@ -1,0 +1,71 @@
+/* ============================================================
+   企业商用级设计令牌（Enterprise Design Tokens）
+   克制、典雅、高质感色彩体系，微投影与平滑交互动效
+   ============================================================ */
+:root {
+  /* 背景与表面色 */
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --surface-glass: rgba(255, 255, 255, 0.82);
+
+  /* 文字层级（低反射、高可读性） */
+  --text-1: #1f2328;
+  --text-2: #57606a;
+  --text-3: #8c959f;
+
+  /* 主色调：克制深邃的商用科技蓝 */
+  --blue: #0969da;
+  --blue-hover: #085cc0;
+  --blue-active: #074da3;
+  --blue-soft: rgba(9, 105, 218, 0.08);
+  --blue-ring: rgba(9, 105, 218, 0.22);
+
+  /* 辅助功能色（自然低饱和度、企业级视觉规范） */
+  --green: #1a7f37;
+  --green-hover: #14662c;
+  --green-soft: rgba(26, 127, 55, 0.08);
+  
+  --orange: #9a6700;
+  --orange-hover: #7d5300;
+  --orange-soft: rgba(154, 103, 0, 0.08);
+
+  --red: #cf222e;
+  --red-hover: #a41b24;
+  --red-soft: rgba(207, 34, 46, 0.08);
+
+  --purple: #8250df;
+  --purple-soft: rgba(130, 80, 223, 0.08);
+
+  --cyan: #057a8a;
+  --cyan-soft: rgba(5, 122, 138, 0.08);
+
+  /* 发丝线与分界线 */
+  --hairline: rgba(31, 35, 40, 0.08);
+  --hairline-strong: rgba(31, 35, 40, 0.14);
+
+  /* 圆角 */
+  --radius-xl: 18px;
+  --radius-lg: 14px;
+  --radius-md: 10px;
+  --radius-sm: 6px;
+
+  /* 投影（微光遮蔽式深度，企业级克制层深） */
+  --shadow-card: 0 1px 3px rgba(31, 35, 40, 0.04), 0 6px 18px rgba(31, 35, 40, 0.03);
+  --shadow-card-hover: 0 3px 8px rgba(31, 35, 40, 0.06), 0 12px 28px rgba(31, 35, 40, 0.06);
+  --shadow-float: 0 4px 14px rgba(31, 35, 40, 0.08), 0 16px 36px rgba(31, 35, 40, 0.08);
+
+  /* 材质滤镜 */
+  --material-blur: saturate(160%) blur(16px);
+
+  /* 字体栈 */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+
+  /* 动效曲线 */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.24s;
+}

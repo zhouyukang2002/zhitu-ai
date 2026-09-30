@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: elasticsearch:8.15.0
+    container_name: zhitu-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - zhitu-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: zhitu-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - TZ=Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    networks:
+      - zhitu-network
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: zhitu-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - zhitu-network
+
+volumes:
+  es_data:
+  mysql_data:
+  redis_data:
+
+networks:
+  zhitu-network:
+    driver: bridge

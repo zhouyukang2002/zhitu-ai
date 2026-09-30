@@ -1,0 +1,1387 @@
+{
+ "desc": "诊断金标准集 v1.0：评测脚本按 records 定义为 evalUser 生成 learning_record，调用诊断后断言。断言规则：1) expectWeakest 命中实际最弱 kp；2) expectOrder 与实际 score 升序一致；3) 分数单调性（acc 更低分更低）；4) 高掌握(acc>=0.9 且不太慢)score>=75、低掌握(acc<=0.4)score<=55。BASELINE_MS=60000，efficiency=clamp(60000/avgMs,0.6,1.0)。",
+ "groups": [
+  {
+   "id": "dg01",
+   "name": "单薄弱-明确",
+   "records": [
+    {
+     "kp": "MySQL 索引",
+     "n": 10,
+     "acc": 0.3,
+     "avgMs": 30000
+    },
+    {
+     "kp": "集合框架",
+     "n": 10,
+     "acc": 0.9,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "MySQL 索引",
+    "order": [
+     "MySQL 索引",
+     "集合框架"
+    ],
+    "scores": {
+     "MySQL 索引": 51,
+     "集合框架": 93
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg02",
+   "name": "单薄弱-中等差距",
+   "records": [
+    {
+     "kp": "泛型",
+     "n": 8,
+     "acc": 0.5,
+     "avgMs": 30000
+    },
+    {
+     "kp": "多线程",
+     "n": 8,
+     "acc": 0.8,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "泛型",
+    "order": [
+     "泛型",
+     "多线程"
+    ],
+    "scores": {
+     "泛型": 65,
+     "多线程": 82
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg03",
+   "name": "单薄弱-轻微差距",
+   "records": [
+    {
+     "kp": "Spring IoC",
+     "n": 10,
+     "acc": 0.7,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Redis 数据结构",
+     "n": 10,
+     "acc": 0.85,
+     "avgMs": 25000
+    }
+   ],
+   "expect": {
+    "weakest": "Spring IoC",
+    "order": [
+     "Spring IoC",
+     "Redis 数据结构"
+    ],
+    "scores": {
+     "Spring IoC": 79,
+     "Redis 数据结构": 86
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg04",
+   "name": "单薄弱-三kp定位",
+   "records": [
+    {
+     "kp": "动态 SQL",
+     "n": 6,
+     "acc": 0.4,
+     "avgMs": 30000
+    },
+    {
+     "kp": "事务与锁",
+     "n": 6,
+     "acc": 0.7,
+     "avgMs": 25000
+    },
+    {
+     "kp": "缓存一致性",
+     "n": 6,
+     "acc": 0.9,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "动态 SQL",
+    "order": [
+     "动态 SQL",
+     "事务与锁",
+     "缓存一致性"
+    ],
+    "scores": {
+     "动态 SQL": 53,
+     "事务与锁": 77,
+     "缓存一致性": 88
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg05",
+   "name": "单薄弱-全对对照组",
+   "records": [
+    {
+     "kp": "垃圾回收",
+     "n": 10,
+     "acc": 0.2,
+     "avgMs": 30000
+    },
+    {
+     "kp": "IO 流",
+     "n": 10,
+     "acc": 1.0,
+     "avgMs": 15000
+    }
+   ],
+   "expect": {
+    "weakest": "垃圾回收",
+    "order": [
+     "垃圾回收",
+     "IO 流"
+    ],
+    "scores": {
+     "垃圾回收": 44,
+     "IO 流": 100
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg06",
+   "name": "单薄弱-大样本",
+   "records": [
+    {
+     "kp": "Pandas 数据结构",
+     "n": 20,
+     "acc": 0.35,
+     "avgMs": 40000
+    },
+    {
+     "kp": "Vue3 响应式",
+     "n": 20,
+     "acc": 0.9,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "Pandas 数据结构",
+    "order": [
+     "Pandas 数据结构",
+     "Vue3 响应式"
+    ],
+    "scores": {
+     "Pandas 数据结构": 54,
+     "Vue3 响应式": 93
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg07",
+   "name": "单薄弱-小样本弱",
+   "records": [
+    {
+     "kp": "RAG 管线",
+     "n": 3,
+     "acc": 0.0,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Prompt 工程",
+     "n": 3,
+     "acc": 0.7,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "RAG 管线",
+    "order": [
+     "RAG 管线",
+     "Prompt 工程"
+    ],
+    "scores": {
+     "RAG 管线": 30,
+     "Prompt 工程": 77
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg08",
+   "name": "单薄弱-反转对照",
+   "records": [
+    {
+     "kp": "Docker 容器化",
+     "n": 12,
+     "acc": 0.9,
+     "avgMs": 20000
+    },
+    {
+     "kp": "线程安全集合",
+     "n": 12,
+     "acc": 0.3,
+     "avgMs": 35000
+    }
+   ],
+   "expect": {
+    "weakest": "线程安全集合",
+    "order": [
+     "线程安全集合",
+     "Docker 容器化"
+    ],
+    "scores": {
+     "Docker 容器化": 94,
+     "线程安全集合": 53
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg09",
+   "name": "双薄弱排序-清晰",
+   "records": [
+    {
+     "kp": "MySQL 索引",
+     "n": 10,
+     "acc": 0.2,
+     "avgMs": 30000
+    },
+    {
+     "kp": "集合框架",
+     "n": 10,
+     "acc": 0.4,
+     "avgMs": 30000
+    },
+    {
+     "kp": "多线程",
+     "n": 10,
+     "acc": 0.9,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "MySQL 索引",
+    "order": [
+     "MySQL 索引",
+     "集合框架",
+     "多线程"
+    ],
+    "scores": {
+     "MySQL 索引": 44,
+     "集合框架": 58,
+     "多线程": 93
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg10",
+   "name": "双薄弱排序-接近",
+   "records": [
+    {
+     "kp": "泛型",
+     "n": 10,
+     "acc": 0.42,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Spring IoC",
+     "n": 10,
+     "acc": 0.45,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Redis 数据结构",
+     "n": 10,
+     "acc": 0.9,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "泛型",
+    "order": [
+     "泛型",
+     "Spring IoC",
+     "Redis 数据结构"
+    ],
+    "scores": {
+     "泛型": 58,
+     "Spring IoC": 58,
+     "Redis 数据结构": 93
+    },
+    "ties": true
+   }
+  },
+  {
+   "id": "dg11",
+   "name": "双薄弱-中段定位",
+   "records": [
+    {
+     "kp": "JVM 内存结构",
+     "n": 8,
+     "acc": 0.9,
+     "avgMs": 15000
+    },
+    {
+     "kp": "动态 SQL",
+     "n": 8,
+     "acc": 0.5,
+     "avgMs": 30000
+    },
+    {
+     "kp": "IO 流",
+     "n": 8,
+     "acc": 0.25,
+     "avgMs": 40000
+    }
+   ],
+   "expect": {
+    "weakest": "IO 流",
+    "order": [
+     "IO 流",
+     "动态 SQL",
+     "JVM 内存结构"
+    ],
+    "scores": {
+     "JVM 内存结构": 91,
+     "动态 SQL": 65,
+     "IO 流": 48
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg12",
+   "name": "双薄弱-全弱排序",
+   "records": [
+    {
+     "kp": "事务与锁",
+     "n": 6,
+     "acc": 0.3,
+     "avgMs": 40000
+    },
+    {
+     "kp": "缓存一致性",
+     "n": 6,
+     "acc": 0.45,
+     "avgMs": 35000
+    },
+    {
+     "kp": "垃圾回收",
+     "n": 6,
+     "acc": 0.55,
+     "avgMs": 30000
+    }
+   ],
+   "expect": {
+    "weakest": "事务与锁",
+    "order": [
+     "事务与锁",
+     "缓存一致性",
+     "垃圾回收"
+    ],
+    "scores": {
+     "事务与锁": 53,
+     "缓存一致性": 65,
+     "垃圾回收": 65
+    },
+    "ties": true
+   }
+  },
+  {
+   "id": "dg13",
+   "name": "三薄弱-混合样本",
+   "records": [
+    {
+     "kp": "Pandas 数据结构",
+     "n": 15,
+     "acc": 0.33,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Vue3 响应式",
+     "n": 10,
+     "acc": 0.5,
+     "avgMs": 25000
+    },
+    {
+     "kp": "RAG 管线",
+     "n": 5,
+     "acc": 0.6,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "Pandas 数据结构",
+    "order": [
+     "Pandas 数据结构",
+     "Vue3 响应式",
+     "RAG 管线"
+    ],
+    "scores": {
+     "Pandas 数据结构": 53,
+     "Vue3 响应式": 65,
+     "RAG 管线": 72
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg14",
+   "name": "四kp排序",
+   "records": [
+    {
+     "kp": "MySQL 索引",
+     "n": 5,
+     "acc": 0.1,
+     "avgMs": 50000
+    },
+    {
+     "kp": "集合框架",
+     "n": 5,
+     "acc": 0.4,
+     "avgMs": 40000
+    },
+    {
+     "kp": "多线程",
+     "n": 5,
+     "acc": 0.7,
+     "avgMs": 30000
+    },
+    {
+     "kp": "泛型",
+     "n": 5,
+     "acc": 0.95,
+     "avgMs": 15000
+    }
+   ],
+   "expect": {
+    "weakest": "MySQL 索引",
+    "order": [
+     "MySQL 索引",
+     "集合框架",
+     "多线程",
+     "泛型"
+    ],
+    "scores": {
+     "MySQL 索引": 30,
+     "集合框架": 58,
+     "多线程": 86,
+     "泛型": 100
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg15",
+   "name": "五kp全谱",
+   "records": [
+    {
+     "kp": "Spring IoC",
+     "n": 4,
+     "acc": 0.0,
+     "avgMs": 50000
+    },
+    {
+     "kp": "Redis 数据结构",
+     "n": 4,
+     "acc": 0.25,
+     "avgMs": 45000
+    },
+    {
+     "kp": "动态 SQL",
+     "n": 4,
+     "acc": 0.5,
+     "avgMs": 40000
+    },
+    {
+     "kp": "事务与锁",
+     "n": 4,
+     "acc": 0.75,
+     "avgMs": 30000
+    },
+    {
+     "kp": "缓存一致性",
+     "n": 4,
+     "acc": 1.0,
+     "avgMs": 15000
+    }
+   ],
+   "expect": {
+    "weakest": "Spring IoC",
+    "order": [
+     "Spring IoC",
+     "Redis 数据结构",
+     "动态 SQL",
+     "事务与锁",
+     "缓存一致性"
+    ],
+    "scores": {
+     "Spring IoC": 30,
+     "Redis 数据结构": 48,
+     "动态 SQL": 65,
+     "事务与锁": 82,
+     "缓存一致性": 100
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg16",
+   "name": "排序-差距微小稳定",
+   "records": [
+    {
+     "kp": "垃圾回收",
+     "n": 10,
+     "acc": 0.6,
+     "avgMs": 30000
+    },
+    {
+     "kp": "IO 流",
+     "n": 10,
+     "acc": 0.65,
+     "avgMs": 30000
+    }
+   ],
+   "expect": {
+    "weakest": "垃圾回收",
+    "order": [
+     "垃圾回收",
+     "IO 流"
+    ],
+    "scores": {
+     "垃圾回收": 72,
+     "IO 流": 72
+    },
+    "ties": true
+   }
+  },
+  {
+   "id": "dg17",
+   "name": "效率修正-同对错不同耗时",
+   "records": [
+    {
+     "kp": "MySQL 索引",
+     "n": 10,
+     "acc": 0.8,
+     "avgMs": 120000
+    },
+    {
+     "kp": "集合框架",
+     "n": 10,
+     "acc": 0.8,
+     "avgMs": 15000
+    }
+   ],
+   "expect": {
+    "weakest": "MySQL 索引",
+    "order": [
+     "MySQL 索引",
+     "集合框架"
+    ],
+    "scores": {
+     "MySQL 索引": 74,
+     "集合框架": 86
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg18",
+   "name": "效率修正-极慢拖分",
+   "records": [
+    {
+     "kp": "多线程",
+     "n": 8,
+     "acc": 0.9,
+     "avgMs": 300000
+    },
+    {
+     "kp": "泛型",
+     "n": 8,
+     "acc": 0.7,
+     "avgMs": 10000
+    }
+   ],
+   "expect": {
+    "weakest": "多线程",
+    "order": [
+     "多线程",
+     "泛型"
+    ],
+    "scores": {
+     "多线程": 79,
+     "泛型": 82
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg19",
+   "name": "效率修正-效率拉平对错",
+   "records": [
+    {
+     "kp": "Spring IoC",
+     "n": 10,
+     "acc": 0.57,
+     "avgMs": 10000
+    },
+    {
+     "kp": "Redis 数据结构",
+     "n": 10,
+     "acc": 0.71,
+     "avgMs": 180000
+    }
+   ],
+   "expect": {
+    "weakest": "Redis 数据结构",
+    "order": [
+     "Redis 数据结构",
+     "Spring IoC"
+    ],
+    "scores": {
+     "Spring IoC": 72,
+     "Redis 数据结构": 67
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg20",
+   "name": "效率修正-三档耗时",
+   "records": [
+    {
+     "kp": "JVM 内存结构",
+     "n": 6,
+     "acc": 0.6,
+     "avgMs": 60000
+    },
+    {
+     "kp": "动态 SQL",
+     "n": 6,
+     "acc": 0.6,
+     "avgMs": 12000
+    },
+    {
+     "kp": "IO 流",
+     "n": 6,
+     "acc": 0.6,
+     "avgMs": 200000
+    }
+   ],
+   "expect": {
+    "weakest": "IO 流",
+    "order": [
+     "IO 流",
+     "JVM 内存结构",
+     "动态 SQL"
+    ],
+    "scores": {
+     "JVM 内存结构": 77,
+     "动态 SQL": 77,
+     "IO 流": 65
+    },
+    "ties": true
+   }
+  },
+  {
+   "id": "dg21",
+   "name": "效率-快对慢错交叉",
+   "records": [
+    {
+     "kp": "事务与锁",
+     "n": 10,
+     "acc": 0.9,
+     "avgMs": 180000
+    },
+    {
+     "kp": "缓存一致性",
+     "n": 10,
+     "acc": 0.45,
+     "avgMs": 8000
+    }
+   ],
+   "expect": {
+    "weakest": "缓存一致性",
+    "order": [
+     "缓存一致性",
+     "事务与锁"
+    ],
+    "scores": {
+     "事务与锁": 81,
+     "缓存一致性": 58
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg22",
+   "name": "效率-混合修正",
+   "records": [
+    {
+     "kp": "Pandas 数据结构",
+     "n": 10,
+     "acc": 0.4,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Vue3 响应式",
+     "n": 10,
+     "acc": 0.6,
+     "avgMs": 240000
+    },
+    {
+     "kp": "RAG 管线",
+     "n": 10,
+     "acc": 0.6,
+     "avgMs": 12000
+    }
+   ],
+   "expect": {
+    "weakest": "Pandas 数据结构",
+    "order": [
+     "Pandas 数据结构",
+     "Vue3 响应式",
+     "RAG 管线"
+    ],
+    "scores": {
+     "Pandas 数据结构": 58,
+     "Vue3 响应式": 60,
+     "RAG 管线": 72
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg23",
+   "name": "效率-均速下限钳制",
+   "records": [
+    {
+     "kp": "Docker 容器化",
+     "n": 6,
+     "acc": 0.2,
+     "avgMs": 600000
+    },
+    {
+     "kp": "线程安全集合",
+     "n": 6,
+     "acc": 0.35,
+     "avgMs": 600000
+    }
+   ],
+   "expect": {
+    "weakest": "Docker 容器化",
+    "order": [
+     "Docker 容器化",
+     "线程安全集合"
+    ],
+    "scores": {
+     "Docker 容器化": 30,
+     "线程安全集合": 41
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg24",
+   "name": "效率-极快满分",
+   "records": [
+    {
+     "kp": "垃圾回收",
+     "n": 10,
+     "acc": 1.0,
+     "avgMs": 5000
+    },
+    {
+     "kp": "IO 流",
+     "n": 10,
+     "acc": 0.75,
+     "avgMs": 30000
+    }
+   ],
+   "expect": {
+    "weakest": "IO 流",
+    "order": [
+     "IO 流",
+     "垃圾回收"
+    ],
+    "scores": {
+     "垃圾回收": 100,
+     "IO 流": 86
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg25",
+   "name": "小样本-全错两次",
+   "records": [
+    {
+     "kp": "MySQL 索引",
+     "n": 2,
+     "acc": 0.0,
+     "avgMs": 30000
+    },
+    {
+     "kp": "集合框架",
+     "n": 10,
+     "acc": 0.8,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "MySQL 索引",
+    "order": [
+     "MySQL 索引",
+     "集合框架"
+    ],
+    "scores": {
+     "MySQL 索引": 30,
+     "集合框架": 86
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg26",
+   "name": "小样本-单次全对",
+   "records": [
+    {
+     "kp": "多线程",
+     "n": 1,
+     "acc": 1.0,
+     "avgMs": 20000
+    },
+    {
+     "kp": "泛型",
+     "n": 10,
+     "acc": 0.3,
+     "avgMs": 30000
+    }
+   ],
+   "expect": {
+    "weakest": "泛型",
+    "order": [
+     "泛型",
+     "多线程"
+    ],
+    "scores": {
+     "多线程": 100,
+     "泛型": 51
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg27",
+   "name": "小样本-全低置信排序",
+   "records": [
+    {
+     "kp": "Spring IoC",
+     "n": 2,
+     "acc": 0.0,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Redis 数据结构",
+     "n": 2,
+     "acc": 0.5,
+     "avgMs": 25000
+    },
+    {
+     "kp": "动态 SQL",
+     "n": 2,
+     "acc": 1.0,
+     "avgMs": 15000
+    }
+   ],
+   "expect": {
+    "weakest": "Spring IoC",
+    "order": [
+     "Spring IoC",
+     "Redis 数据结构",
+     "动态 SQL"
+    ],
+    "scores": {
+     "Spring IoC": 30,
+     "Redis 数据结构": 65,
+     "动态 SQL": 100
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg28",
+   "name": "边界-恰好及格线",
+   "records": [
+    {
+     "kp": "事务与锁",
+     "n": 10,
+     "acc": 0.5,
+     "avgMs": 30000
+    },
+    {
+     "kp": "缓存一致性",
+     "n": 10,
+     "acc": 0.55,
+     "avgMs": 28000
+    }
+   ],
+   "expect": {
+    "weakest": "事务与锁",
+    "order": [
+     "事务与锁",
+     "缓存一致性"
+    ],
+    "scores": {
+     "事务与锁": 65,
+     "缓存一致性": 72
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg29",
+   "name": "边界-全对全错对照",
+   "records": [
+    {
+     "kp": "垃圾回收",
+     "n": 10,
+     "acc": 0.0,
+     "avgMs": 60000
+    },
+    {
+     "kp": "IO 流",
+     "n": 10,
+     "acc": 1.0,
+     "avgMs": 60000
+    }
+   ],
+   "expect": {
+    "weakest": "垃圾回收",
+    "order": [
+     "垃圾回收",
+     "IO 流"
+    ],
+    "scores": {
+     "垃圾回收": 30,
+     "IO 流": 100
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg30",
+   "name": "边界-大样本高频错",
+   "records": [
+    {
+     "kp": "Pandas 数据结构",
+     "n": 30,
+     "acc": 0.4,
+     "avgMs": 35000
+    },
+    {
+     "kp": "Vue3 响应式",
+     "n": 5,
+     "acc": 1.0,
+     "avgMs": 10000
+    }
+   ],
+   "expect": {
+    "weakest": "Pandas 数据结构",
+    "order": [
+     "Pandas 数据结构",
+     "Vue3 响应式"
+    ],
+    "scores": {
+     "Pandas 数据结构": 58,
+     "Vue3 响应式": 100
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg31",
+   "name": "混合-弱且慢排最前",
+   "records": [
+    {
+     "kp": "RAG 管线",
+     "n": 10,
+     "acc": 0.25,
+     "avgMs": 240000
+    },
+    {
+     "kp": "Prompt 工程",
+     "n": 10,
+     "acc": 0.45,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Docker 容器化",
+     "n": 10,
+     "acc": 0.95,
+     "avgMs": 10000
+    }
+   ],
+   "expect": {
+    "weakest": "RAG 管线",
+    "order": [
+     "RAG 管线",
+     "Prompt 工程",
+     "Docker 容器化"
+    ],
+    "scores": {
+     "RAG 管线": 32,
+     "Prompt 工程": 58,
+     "Docker 容器化": 100
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg32",
+   "name": "混合-强但极慢居中",
+   "records": [
+    {
+     "kp": "MySQL 索引",
+     "n": 8,
+     "acc": 0.35,
+     "avgMs": 30000
+    },
+    {
+     "kp": "集合框架",
+     "n": 8,
+     "acc": 1.0,
+     "avgMs": 300000
+    },
+    {
+     "kp": "多线程",
+     "n": 8,
+     "acc": 0.9,
+     "avgMs": 15000
+    }
+   ],
+   "expect": {
+    "weakest": "MySQL 索引",
+    "order": [
+     "MySQL 索引",
+     "集合框架",
+     "多线程"
+    ],
+    "scores": {
+     "MySQL 索引": 56,
+     "集合框架": 88,
+     "多线程": 91
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg33",
+   "name": "混合-六kp复杂谱",
+   "records": [
+    {
+     "kp": "泛型",
+     "n": 4,
+     "acc": 0.0,
+     "avgMs": 10000
+    },
+    {
+     "kp": "Spring IoC",
+     "n": 4,
+     "acc": 0.25,
+     "avgMs": 10000
+    },
+    {
+     "kp": "Redis 数据结构",
+     "n": 4,
+     "acc": 0.5,
+     "avgMs": 10000
+    },
+    {
+     "kp": "动态 SQL",
+     "n": 4,
+     "acc": 0.75,
+     "avgMs": 10000
+    },
+    {
+     "kp": "事务与锁",
+     "n": 4,
+     "acc": 0.9,
+     "avgMs": 10000
+    },
+    {
+     "kp": "缓存一致性",
+     "n": 4,
+     "acc": 1.0,
+     "avgMs": 10000
+    }
+   ],
+   "expect": {
+    "weakest": "泛型",
+    "order": [
+     "泛型",
+     "Spring IoC",
+     "Redis 数据结构",
+     "动态 SQL",
+     "事务与锁",
+     "缓存一致性"
+    ],
+    "scores": {
+     "泛型": 30,
+     "Spring IoC": 48,
+     "Redis 数据结构": 65,
+     "动态 SQL": 82,
+     "事务与锁": 100,
+     "缓存一致性": 100
+    },
+    "ties": true
+   }
+  },
+  {
+   "id": "dg34",
+   "name": "混合-同分异因",
+   "records": [
+    {
+     "kp": "JVM 内存结构",
+     "n": 10,
+     "acc": 0.43,
+     "avgMs": 20000
+    },
+    {
+     "kp": "IO 流",
+     "n": 10,
+     "acc": 0.72,
+     "avgMs": 120000
+    }
+   ],
+   "expect": {
+    "weakest": "JVM 内存结构",
+    "order": [
+     "JVM 内存结构",
+     "IO 流"
+    ],
+    "scores": {
+     "JVM 内存结构": 58,
+     "IO 流": 67
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg35",
+   "name": "混合-双强对照",
+   "records": [
+    {
+     "kp": "垃圾回收",
+     "n": 10,
+     "acc": 0.95,
+     "avgMs": 12000
+    },
+    {
+     "kp": "IO 流",
+     "n": 10,
+     "acc": 0.92,
+     "avgMs": 15000
+    }
+   ],
+   "expect": {
+    "weakest": "IO 流",
+    "order": [
+     "IO 流",
+     "垃圾回收"
+    ],
+    "scores": {
+     "垃圾回收": 100,
+     "IO 流": 93
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg36",
+   "name": "真实场景-转型测试",
+   "records": [
+    {
+     "kp": "JavaSE 基础",
+     "n": 12,
+     "acc": 0.75,
+     "avgMs": 25000
+    },
+    {
+     "kp": "MySQL 索引",
+     "n": 10,
+     "acc": 0.5,
+     "avgMs": 30000
+    },
+    {
+     "kp": "集合框架",
+     "n": 8,
+     "acc": 0.25,
+     "avgMs": 40000
+    }
+   ],
+   "expect": {
+    "weakest": "集合框架",
+    "order": [
+     "集合框架",
+     "MySQL 索引",
+     "JavaSE 基础"
+    ],
+    "scores": {
+     "JavaSE 基础": 82,
+     "MySQL 索引": 65,
+     "集合框架": 48
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg37",
+   "name": "真实场景-前端学习者",
+   "records": [
+    {
+     "kp": "Vue3 响应式",
+     "n": 10,
+     "acc": 0.3,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Pandas 数据结构",
+     "n": 6,
+     "acc": 0.67,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "Vue3 响应式",
+    "order": [
+     "Vue3 响应式",
+     "Pandas 数据结构"
+    ],
+    "scores": {
+     "Vue3 响应式": 51,
+     "Pandas 数据结构": 77
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg38",
+   "name": "真实场景-AI转型者",
+   "records": [
+    {
+     "kp": "Prompt 工程",
+     "n": 10,
+     "acc": 0.9,
+     "avgMs": 15000
+    },
+    {
+     "kp": "RAG 管线",
+     "n": 10,
+     "acc": 0.55,
+     "avgMs": 30000
+    },
+    {
+     "kp": "Docker 容器化",
+     "n": 10,
+     "acc": 0.1,
+     "avgMs": 60000
+    }
+   ],
+   "expect": {
+    "weakest": "Docker 容器化",
+    "order": [
+     "Docker 容器化",
+     "RAG 管线",
+     "Prompt 工程"
+    ],
+    "scores": {
+     "Prompt 工程": 93,
+     "RAG 管线": 72,
+     "Docker 容器化": 37
+    },
+    "ties": false
+   }
+  },
+  {
+   "id": "dg39",
+   "name": "真实场景-面试冲刺",
+   "records": [
+    {
+     "kp": "线程安全集合",
+     "n": 10,
+     "acc": 0.6,
+     "avgMs": 30000
+    },
+    {
+     "kp": "缓存一致性",
+     "n": 10,
+     "acc": 0.6,
+     "avgMs": 30000
+    },
+    {
+     "kp": "垃圾回收",
+     "n": 10,
+     "acc": 0.6,
+     "avgMs": 30000
+    }
+   ],
+   "expect": {
+    "weakest": "线程安全集合",
+    "order": [
+     "线程安全集合",
+     "缓存一致性",
+     "垃圾回收"
+    ],
+    "scores": {
+     "线程安全集合": 72,
+     "缓存一致性": 72,
+     "垃圾回收": 72
+    },
+    "ties": true
+   }
+  },
+  {
+   "id": "dg40",
+   "name": "真实场景-稳步进步",
+   "records": [
+    {
+     "kp": "MySQL 索引",
+     "n": 6,
+     "acc": 0.17,
+     "avgMs": 45000
+    },
+    {
+     "kp": "MySQL 索引",
+     "n": 6,
+     "acc": 0.83,
+     "avgMs": 20000
+    }
+   ],
+   "expect": {
+    "weakest": "MySQL 索引",
+    "order": [
+     "MySQL 索引"
+    ],
+    "scores": {
+     "MySQL 索引": 65
+    },
+    "ties": false
+   }
+  }
+ ]
+}
