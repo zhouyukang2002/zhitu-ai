@@ -60,9 +60,12 @@ public class EsHealthWatchdog {
         lastRestartAttempt = now;
 
         // ES 安装根目录走配置（默认相对路径，跨机器/开源部署不失效），仅本地开发环境在 yml 覆盖
+        if (cn.hutool.core.util.StrUtil.isBlank(props.getEsHome())) {
+            return;
+        }
         File esBat = new File(new File(props.getEsHome()), "bin/elasticsearch.bat");
         if (!esBat.exists()) {
-            log.debug("[ES探活看门狗] 未在 tutor.ai.es-home={} 下找到 elasticsearch.bat，跳过自动进程拉起", props.getEsHome());
+            log.debug("[ES探活看门狗] 未在 tutor.es-home={} 下找到 elasticsearch.bat，跳过自动进程拉起", props.getEsHome());
             return;
         }
 

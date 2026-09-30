@@ -5,6 +5,7 @@ import com.tutor.knowledge.KnowledgeBase;
 import com.tutor.prompt.PromptStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,9 @@ import java.util.Map;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
+
+    @Value("${tutor.biz.mcp-sync-url:http://localhost:8081/api/admin/corpus/sync}")
+    private String mcpSyncUrl;
 
     private final PromptStore promptStore;
     private final com.tutor.knowledge.KnowledgeIngestionService ingestionService;
@@ -116,7 +120,7 @@ public class AdminController {
         try {
             java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
             java.net.http.HttpRequest req = java.net.http.HttpRequest.newBuilder()
-                    .uri(java.net.URI.create("http://localhost:8081/api/admin/corpus/sync"))
+                    .uri(java.net.URI.create(mcpSyncUrl))
                     .POST(java.net.http.HttpRequest.BodyPublishers.noBody())
                     .timeout(java.time.Duration.ofSeconds(10))
                     .build();
