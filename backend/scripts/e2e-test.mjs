@@ -1,6 +1,6 @@
 // 端到端契约验证脚本（对齐《后端开发注意事项》8.2：用 Node 测，不用 curl 测中文）
 // 用法: node scripts/e2e-test.mjs
-const BASE = 'http://localhost:8080'
+const BASE = process.env.BASE_URL || 'http://localhost:8080'
 let pass = 0, fail = 0
 
 function check(name, cond, detail = '') {

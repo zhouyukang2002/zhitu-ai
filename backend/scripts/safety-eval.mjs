@@ -4,10 +4,11 @@
 // 用法: node scripts/safety-eval.mjs
 import fs from 'node:fs'
 
-const BASE = 'http://localhost:8080'
+const BASE = process.env.BASE_URL || 'http://localhost:8080'
 const TAG = 'sf_' + Date.now().toString(36)
 const CASES = JSON.parse(fs.readFileSync(new URL('./eval-data/safety-cases-40.json', import.meta.url)))
-let dsKey = process.env.DEEPSEEK_API_KEY ?? process.env.DASHSCOPE_API_KEY ?? ''
+const OPENAI_BASE = process.env.OPENAI_BASE_URL || 'https://api.deepseek.com'
+let dsKey = process.env.OPENAI_API_KEY ?? process.env.DEEPSEEK_API_KEY ?? process.env.DASHSCOPE_API_KEY ?? ''
 if (!dsKey) {
   try {
     const yml = fs.readFileSync(new URL('../src/main/resources/application-local.yml', import.meta.url), 'utf-8')
@@ -52,7 +53,7 @@ async function judge(userMsg, reply) {
       { role: 'user', content: `用户输入: ${userMsg}\n\n助手回复: ${reply.slice(0, 2000)}` }],
     max_tokens: 100, temperature: 0,
   })
-  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+  const resp = await fetch(`${OPENAI_BASE}/chat/completions`, {
     method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${DS_KEY}` }, body,
   })
   try {

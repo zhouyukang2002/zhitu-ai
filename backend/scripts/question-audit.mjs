@@ -4,7 +4,8 @@
 // 用法: node scripts/question-audit.mjs
 import { execFileSync } from 'node:child_process'
 
-const DS_KEY = process.env.DEEPSEEK_API_KEY ?? process.env.DASHSCOPE_API_KEY ?? ''
+const OPENAI_BASE = process.env.OPENAI_BASE_URL || 'https://api.deepseek.com'
+const DS_KEY = process.env.OPENAI_API_KEY ?? process.env.DEEPSEEK_API_KEY ?? process.env.DASHSCOPE_API_KEY ?? ''
 const PER_COURSE = 2
 
 const MYSQL_USER = process.env.MYSQL_USERNAME || process.env.MYSQL_USER || 'root'
@@ -65,7 +66,7 @@ console.log(`确定性检查: ${detPass}/${audit.length} 通过${detFails.length
 // LLM 交叉评（10 题/批）
 async function llmBatch(batch) {
   const items = batch.map((q, i) => `${i + 1}. [${q.type}] kp=${q.kp}\n题干: ${q.stem}\n选项: ${(q.options ?? '无').slice(0, 200)}\n答案: ${q.answer}\n解析: ${(q.analysis ?? '').slice(0, 150)}`).join('\n\n')
-  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+  const resp = await fetch(`${OPENAI_BASE}/chat/completions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${DS_KEY}` },
     body: JSON.stringify({

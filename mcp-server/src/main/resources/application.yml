@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}
 
 spring:
   application:
@@ -19,4 +19,5 @@ spring:
 
 tutor:
   biz:
-    data-dir: ./data
+    data-dir: ${TUTOR_BIZ_DATA_DIR:./data}
+    corpus-dir: ${TUTOR_CORPUS_DIR:../corpus}

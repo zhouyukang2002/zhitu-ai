@@ -19,6 +19,16 @@ docker-compose up -d
 | **MySQL** | `mysql:8.0` | `3306` | UTF-8MB4，**挂载 `mysql/init/` 启动时自动建库、建表并灌入种子数据** |
 | **Redis** | `redis:7.0-alpine` | `6379` | 轻量级高频缓存与会话状态存储 |
 
+### 自定义端口与密码（环境变量）
+
+`docker-compose.yml` 支持通过环境变量自定义端口与密码，避免与宿主机现有服务冲突：
+
+```bash
+# 示例：通过环境变量指定端口启动
+MYSQL_PORT=3307 REDIS_PORT=6380 ES_PORT=9201 docker-compose up -d
+```
+或在项目根目录复制 `.env.example` 为 `.env` 进行统一管理。
+
 ---
 
 ## 🛠️ 常见问题排查

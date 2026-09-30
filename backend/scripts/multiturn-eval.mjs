@@ -4,7 +4,7 @@
 // 用法: node scripts/multiturn-eval.mjs
 import fs from 'node:fs'
 
-const BASE = 'http://localhost:8080'
+const BASE = process.env.BASE_URL || 'http://localhost:8080'
 const TAG = 'mt_' + Date.now().toString(36)
 const SCENARIOS = JSON.parse(fs.readFileSync(new URL('./eval-data/multiturn-scenarios-20.json', import.meta.url)))
 const BASE_UID = 5000

@@ -1,5 +1,5 @@
 // 测试零代码新增课程全链路能力验证脚本
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 
 async function sendChat(sessionId, message, userId = 1) {
   const resp = await fetch(`${BASE_URL}/api/chat/stream`, {

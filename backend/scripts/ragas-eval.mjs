@@ -5,8 +5,9 @@
 // 用法: node scripts/ragas-eval.mjs [sampleStep=3]
 import fs from 'node:fs'
 
-const BASE = 'http://localhost:8080'
-const DS_KEY = process.env.DEEPSEEK_API_KEY ?? process.env.DASHSCOPE_API_KEY ?? ''
+const BASE = process.env.BASE_URL || 'http://localhost:8080'
+const OPENAI_BASE = process.env.OPENAI_BASE_URL || 'https://api.deepseek.com'
+const DS_KEY = process.env.OPENAI_API_KEY ?? process.env.DEEPSEEK_API_KEY ?? process.env.DASHSCOPE_API_KEY ?? ''
 const STEP = Number(process.argv[2] || 3)
 const ALL = JSON.parse(fs.readFileSync(new URL('./eval-data/rag-cases-100.json', import.meta.url)))
 const CASES = ALL.filter((_, i) => i % STEP === 0)
@@ -14,7 +15,7 @@ const CASES = ALL.filter((_, i) => i % STEP === 0)
 async function llm(messages, maxTokens = 600) {
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const resp = await fetch('https://api.deepseek.com/chat/completions', {
+      const resp = await fetch(`${OPENAI_BASE}/chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${DS_KEY}` },
         body: JSON.stringify({ model: 'deepseek-chat', messages, max_tokens: maxTokens, temperature: 0 }),
@@ -29,14 +30,16 @@ async function llm(messages, maxTokens = 600) {
 }
 const jsonOf = txt => txt.match(/\{[\s\S]*\}/)?.[0] ?? txt.match(/\[[\s\S]*\]/)?.[0] ?? '{}'
 
-const ES = 'http://localhost:9200'
+const ES = process.env.ES_URL || 'http://localhost:9200'
+const EMBEDDING_URL = process.env.EMBEDDING_BASE_URL ? (process.env.EMBEDDING_BASE_URL.replace(/\/+$/, '') + '/embeddings') : 'https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings'
+const EMBEDDING_KEY = process.env.EMBEDDING_API_KEY || process.env.DASHSCOPE_API_KEY || ''
 // admin /retrieval/search 只返回元数据不含全文，RAGAS 需要正文 → 直接查 ES
 //（复刻 KnowledgeBase.search 的 knn+match 双路 RRF，此处不做重排——四件套对同一组 chunks 判分，A/B 无关）
 async function retrieve(q) {
   const embBody = JSON.stringify({ model: 'text-embedding-v3', input: [q], dimensions: 1024 })
-  const embResp = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings', {
+  const embResp = await fetch(EMBEDDING_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (process.env.DASHSCOPE_API_KEY ?? '') },
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + EMBEDDING_KEY },
     body: embBody,
   })
   const vector = (await embResp.json()).data[0].embedding

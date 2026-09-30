@@ -1,7 +1,7 @@
 // MCP 协议握手验证：SSE 连接 → initialize → tools/list → tools/call
 import http from 'node:http'
 
-const SERVER = 'http://localhost:8081'
+const SERVER = process.env.MCP_SERVER_URL || 'http://localhost:8081'
 let sessionId = null
 const sseMessages = []
 const waitForId = async (id, timeoutMs = 30000) => {

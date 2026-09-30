@@ -5,7 +5,7 @@
 // 前置：引擎已启动（:8080）且已 POST /api/admin/corpus/sync 摄入语料
 import fs from 'node:fs'
 
-const BASE = 'http://localhost:8080'
+const BASE = process.env.BASE_URL || 'http://localhost:8080'
 const TOP_K = Number(process.argv[2] || 5)
 const AB = process.argv[3] !== 'false'
 const CASES = JSON.parse(fs.readFileSync(new URL('./eval-data/rag-cases-100.json', import.meta.url)))

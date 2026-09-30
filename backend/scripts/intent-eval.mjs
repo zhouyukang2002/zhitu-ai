@@ -2,7 +2,7 @@
 // 不存在时退回内置 54 题。输出：通过率 + 混淆矩阵 + 每类 P/R/F1 + TTFB 百分位 + 路由来源统计。
 import fs from 'node:fs'
 
-const BASE = 'http://localhost:8080'
+const BASE = process.env.BASE_URL || 'http://localhost:8080'
 const TAG = 's_eval_' + Date.now().toString(36)
 
 const CASES_FILE = new URL('./eval-data/intent-cases-200.json', import.meta.url)

@@ -34,14 +34,24 @@ public class CorpusIngestService {
     private static final Pattern Q_HEADER = Pattern.compile("^##\\s+(q_[A-Za-z0-9_]+)\\s*$");
     private static final Pattern FIELD_LINE = Pattern.compile("^-\\s+([A-Za-z]+)\\s*:\\s*(.*)$");
 
-    @Value("${tutor.biz.corpus-dir:D:/Workspace/知识库}")
+    @Value("${tutor.biz.corpus-dir:${TUTOR_CORPUS_DIR:../corpus}}")
     private String corpusDir;
 
     private final JdbcTemplate jdbc;
 
+    private File getResolvedCorpusDir() {
+        File f = new File(corpusDir);
+        if (!f.exists()) {
+            if (new File("./corpus").exists()) return new File("./corpus");
+            if (new File("../corpus").exists()) return new File("../corpus");
+        }
+        return f;
+    }
+
     public Map<String, Object> syncAll() {
-        File courseDir = new File(corpusDir, "课程");
-        File bankDir = new File(corpusDir, "题库");
+        File root = getResolvedCorpusDir();
+        File courseDir = new File(root, "课程");
+        File bankDir = new File(root, "题库");
         int courses = 0;
         int questions = 0;
         List<String> errors = new ArrayList<>();

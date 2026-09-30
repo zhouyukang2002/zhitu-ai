@@ -4,8 +4,10 @@
 // 前置：ES :9200 已启动且 course_intro 索引已摄入（POST :8080/api/admin/corpus/sync）
 import fs from 'node:fs'
 
-const ES = 'http://localhost:9200'
+const ES = process.env.ES_URL || 'http://localhost:9200'
 const CASES = JSON.parse(fs.readFileSync(new URL('./eval-data/course-recall-150.json', import.meta.url)))
+const EMBEDDING_URL = process.env.EMBEDDING_BASE_URL ? (process.env.EMBEDDING_BASE_URL.replace(/\/+$/, '') + '/embeddings') : 'https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings'
+const EMBEDDING_KEY = process.env.EMBEDDING_API_KEY || process.env.DASHSCOPE_API_KEY || ''
 
 async function searchCourses(goal, size) {
   const body = {
@@ -16,9 +18,9 @@ async function searchCourses(goal, size) {
   }
   // 先取查询向量（与生产 EmbeddingService 同源）
   const embBody = JSON.stringify({ model: 'text-embedding-v3', input: [goal], dimensions: 1024 })
-  const embResp = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings', {
+  const embResp = await fetch(EMBEDDING_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (process.env.DASHSCOPE_API_KEY ?? '') },
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + EMBEDDING_KEY },
     body: embBody,
   })
   body.knn.query_vector = (await embResp.json()).data[0].embedding
