@@ -11,7 +11,7 @@
 [![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.15-005571.svg)](https://www.elastic.co/)
 [![Tests](https://img.shields.io/badge/Tests-63%2F63%20Passing-success.svg)](docs/test-report.md)
 
-[简体中文](./README.md) · [测试报告](./docs/test-report.md) · [快速上手](#-5-分钟快速上手-quick-start) · [系统架构](#-系统架构全景) · [核心特性](#-核心工程特性)
+[English](./README_EN.md) · [简体中文](./README.md) · [测试报告](./docs/test-report.md) · [快速上手](#-5-分钟快速上手-quick-start) · [系统架构](#-系统架构全景) · [核心特性](#-核心工程特性)
 
 </div>
 

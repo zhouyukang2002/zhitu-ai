@@ -6,7 +6,7 @@
 
 ```bash
 npm install
-npm run dev        # 同时启动 Mock 服务(:3001) 和 Vite(:5173)
+npm run dev        # 启动 Vite 开发服务器 (:5173)，自动代理到后端 :8080
 ```
 
 打开 http://localhost:5173 ，试试这些指令：
@@ -43,11 +43,11 @@ VITE_USE_MOCK=false   # /api 代理到 localhost:8080
 
 ```
 frontend/
-├─ mock/                  # 零依赖 Mock 服务（教学闭环场景脚本 + 内存会话）
-│  ├─ server.mjs
-│  └─ data.mjs
-├─ scripts/dev.mjs        # 一键拉起 mock + vite
-└─ src/
+├─ src/
+│  ├─ api/                # request / chat(SSE) / session(REST)
+│  ├─ stores/chat.js      # 组合式 API 轻量全局状态（不引入 Pinia）
+│  ├─ styles/             # tokens.css(设计令牌) + base.css(主题覆写)
+│  └─ components/
    ├─ api/                # request / chat(SSE) / session(REST)
    ├─ stores/chat.js      # 组合式 API 轻量全局状态（不引入 Pinia）
    ├─ styles/             # tokens.css(设计令牌) + base.css(主题覆写)

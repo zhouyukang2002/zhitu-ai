@@ -24,7 +24,7 @@
 ```bash
 # 0) 前置：JDK 17 + Maven + Node 18；本机 MySQL(3306) / Redis(6379)
 #    ES 8.x（可选，未启动时 RAG 降级为本地关键词检索）
-docker-compose up -d        # 一键起 mysql/redis/elasticsearch（见 docker-compose.yml）
+cd ../docker && docker-compose up -d        # 一键起基础设施（ES/MySQL/Redis）
 
 # 1) 建库
 mysql -uroot --default-character-set=utf8mb4 < src/main/resources/db/schema.sql
@@ -33,12 +33,12 @@ mysql -uroot --default-character-set=utf8mb4 < src/main/resources/db/seed.sql
 # 2) 密钥：application-local.yml（gitignored，模板 application-local.example.yml）
 #    未配置 Key 时走全链路降级模式（规则路由/知识库直出/规则判分），闭环可完整演示
 
-# 3) 语料摄入：D:/Workspace/知识库（或 tutor.corpus-dir 配置）→ ES + MySQL + 本地数据面
+# 3) 语料摄入：../corpus（由 tutor.corpus-dir 默认配置）→ ES + MySQL + 本地数据面
 #    引擎侧（8080）：POST /api/admin/corpus/sync；MCP 侧（8081）：POST /api/admin/corpus/sync
 
 # 4) 启动
 mvn spring-boot:run                          # 引擎 8080
-java -jar ../tutor-mcp-server/target/*.jar   # MCP 业务模拟器 8081
+java -jar ../mcp-server/target/*.jar         # MCP 业务模拟器 8081
 
 # 5) 验证
 node scripts/e2e-test.mjs        # 59 项契约回归
