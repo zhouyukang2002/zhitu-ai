@@ -1,4 +1,4 @@
-// RAG 检索评测：基于 scripts/rag-eval-cases.json 计算 Recall@1/@3/@5 与 MRR，
+// RAG 检索评测：基于 scripts/eval-data/rag-cases-100.json 计算 Recall@1/@3/@5 与 MRR，
 // 并对比「RRF 原序（无重排）」与「Cross-Encoder 重排后」两路结果。
 // 用法: node scripts/rag-eval.mjs            （默认 topK=5，同时测两路）
 //       node scripts/rag-eval.mjs 5 false    （第二参 false=只测当前链路，不做 A/B）
