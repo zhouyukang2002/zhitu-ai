@@ -53,7 +53,7 @@ mybatis-plus:
 
 logging:
   level:
-    com.tutor: debug
+    com.tutor: ${LOG_LEVEL:info}
 
 tutor:
   corpus-dir: ${TUTOR_CORPUS_DIR:../corpus}
