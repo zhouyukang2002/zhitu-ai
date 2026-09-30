@@ -8,7 +8,7 @@ import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Component;
 
 /**
- * 交易域工具（模拟 tj-trade 对外能力）：预下单/支付/查询。
+ * 交易域工具（模拟交易业务系统）：预下单/支付/查询。
  * 状态机 PENDING_PAY → PAID；支付幂等；支付确认由用户手动操作触发。
  * 消费者白名单：CourseBuyAgent。
  */

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 题库域工具（模拟 tj-exam 题库服务）。
+ * 题库域工具（模拟考务业务系统题库服务）。
  * 安全设计：题库为课程付费权益，getQuestions/getAnswerKey 均按 (userId, courseId) 鉴权，
  * 未购课在工具层直接拒绝；getQuestions 不下发答案字段（防泄题），getAnswerKey 仅批改链路专用。
  * 消费者白名单：ExerciseAgent（组卷）、GradingAgent（答案与解析）。

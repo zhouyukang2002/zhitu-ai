@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 课程域工具（模拟 tj-course 对外能力）。
+ * 课程域工具（模拟课程业务系统）。
  * 消费者白名单：TeachingAgent（课程衔接推荐）、CourseRecommendAgent（候选生成）。
  */
 @Component
