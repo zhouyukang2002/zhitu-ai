@@ -47,7 +47,7 @@ graph TD
 
 ---
 
-### 模块三：RAG 工业级检索与知识安全测试（RAG & Anti-Pollution）
+### 模块三：RAG 检索与知识安全测试（RAG & Anti-Pollution）
 
 | 用例编号 | 测试场景 | 测试步骤 (Steps) | 预期效果与硬核断言 (Expected Assertions) | 优先级 |
 | :--- | :--- | :--- | :--- | :---: |

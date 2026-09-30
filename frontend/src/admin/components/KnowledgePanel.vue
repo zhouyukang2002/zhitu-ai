@@ -78,7 +78,7 @@
           :class="{ active: currentSubTab === 'metrics' }"
           @click="currentSubTab = 'metrics'"
         >
-          📊 RAG 工业级三元组评测大盘
+          📊 RAG 三元组评测大盘
         </button>
       </div>
 
@@ -249,7 +249,7 @@
       </div>
     </div>
 
-    <!-- ── 5. 子视图 C：RAG 工业级三元组评测大盘 ── -->
+    <!-- ── 5. 子视图 C：RAG 三元组评测大盘 ── -->
     <div v-else class="view-panel metrics-panel">
       <div class="triad-cards">
         <div class="triad-card">
