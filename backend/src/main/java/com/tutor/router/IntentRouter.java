@@ -295,17 +295,18 @@ public class IntentRouter {
             trace.add("STATE_REVISE " + before + "→" + intent);
         }
 
-        // 槽位补全一：缺失知识点且有最近薄弱点，则自然携带
-        if (slots.knowledgePoint() == null && carryWeakPoints != null && !carryWeakPoints.isEmpty()) {
+        // 槽位补全一：缺失技术知识点（为null或为元属性词）且有最近薄弱点，则自然携带
+        if ((slots.knowledgePoint() == null || skillDictionary.isMetaKp(slots.knowledgePoint()))
+                && carryWeakPoints != null && !carryWeakPoints.isEmpty()) {
             String kp = slotExtractor.carryOverWeakPoint(carryWeakPoints);
-            if (kp != null) {
+            if (kp != null && !skillDictionary.isMetaKp(kp)) {
                 slots = slots.withKnowledgePoint(kp);
                 trace.add("SLOT_CARRY 携带最近薄弱点=" + kp);
             }
         }
 
-        // 槽位补全二：若仍无知识点，从多轮历史对话（仅学员发言）回溯活跃技术主题
-        if (slots.knowledgePoint() == null && sessionId != null) {
+        // 槽位补全二：若仍无有效技术知识点，从多轮历史对话（仅学员发言）回溯活跃技术主题
+        if ((slots.knowledgePoint() == null || skillDictionary.isMetaKp(slots.knowledgePoint())) && sessionId != null) {
             try {
                 List<String> userHistory = messageService.recentUserTexts(sessionId, 6);
                 for (int i = userHistory.size() - 1; i >= 0; i--) {
@@ -314,7 +315,7 @@ public class IntentRouter {
                         continue;
                     }
                     String matchedKp = skillDictionary.findKnowledgePointInText(uText);
-                    if (matchedKp != null) {
+                    if (matchedKp != null && !skillDictionary.isMetaKp(matchedKp)) {
                         slots = slots.withKnowledgePoint(matchedKp);
                         trace.add("CONTEXT_BACKFILL 从历史上下文回溯技术主题=" + matchedKp);
                         break;
@@ -325,10 +326,10 @@ public class IntentRouter {
             }
         }
 
-        // 矫正四：出题但完全没有主题（槽位无知识点、也无历史薄弱点/上下文可携带）→ 澄清追问
-        if (intent == Intent.EXERCISE && slots.knowledgePoint() == null) {
+        // 矫正四：出题但完全没有具体技术主题（槽位无有效技术考点、也无历史薄弱点/上下文可携带）→ 澄清追问
+        if (intent == Intent.EXERCISE && (slots.knowledgePoint() == null || skillDictionary.isMetaKp(slots.knowledgePoint()))) {
             trace.add("REVISE→CLARIFY 出题但无知识点主题，先追问");
-            return IntentResult.clarify(slots);
+            return IntentResult.clarify(slots.withKnowledgePoint(null));
         }
 
         return new IntentResult(intent, slots, safe.confidence(), safe.stages());

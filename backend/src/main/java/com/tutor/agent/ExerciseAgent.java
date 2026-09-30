@@ -335,7 +335,7 @@ public class ExerciseAgent {
         return ctx.getMessage();
     }
 
-    /** 已购课程解析：槽位课程名匹配已购订单 > 第一门已购课程（私有题库入口） */
+    /** 已购课程解析：槽位课程名匹配已购订单 > 知识点匹配已购课程名称 */
     private String resolvePaidCourseId(LoopContext ctx) {
         var slots = ctx.getDecision().slots();
         String wanted = slots == null ? null : slots.courseName();
@@ -351,7 +351,17 @@ public class ExerciseAgent {
             }
             return null; // 指定了未购课程 → 不走私有题库（LLM 现场出题 + 提示）
         }
-        return paidOrders.get(0).getCourseId();
+        // 未显式指定课程时：只有当知识点与已购课程名称匹配时才走私有题库，杜绝无脑绑定第一门课引发学科漂移
+        String kp = slots != null ? slots.knowledgePoint() : null;
+        if (kp != null && !kp.isBlank()) {
+            for (var order : paidOrders) {
+                String cName = order.getCourseName();
+                if (cName != null && cName.toLowerCase().contains(kp.toLowerCase())) {
+                    return order.getCourseId();
+                }
+            }
+        }
+        return null;
     }
 
     private String boundCourseName(LoopContext ctx) {

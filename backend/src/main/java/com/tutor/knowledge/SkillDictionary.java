@@ -130,6 +130,13 @@ public class SkillDictionary {
     /** 非技术实体的修饰性元属性词（在存在真实技术关键词时严禁抢占主题） */
     private static final java.util.Set<String> META_KPS = java.util.Set.of("面试", "学习方法");
 
+    public boolean isMetaKp(String name) {
+        if (StrUtil.isBlank(name)) {
+            return false;
+        }
+        return META_KPS.contains(name.trim());
+    }
+
     /** 别名归一：完全匹配优先，其次常见裸词标准化，最后大小写不敏感包含匹配，无命中返回原值 */
     public String byNameOrAlias(String name) {
         if (StrUtil.isBlank(name)) {

@@ -53,6 +53,10 @@ public class RuleFastPath {
         }
         Intent intent = opt.get();
         Slots slots = extractSlots(message);
+        if (intent == Intent.EXERCISE && slots.knowledgePoint() != null && skillDictionary.isMetaKp(slots.knowledgePoint())) {
+            // 出题场景下，“面试/真题”等为考察形式而非具体技术知识点，置空以交由上下文回溯或澄清
+            slots = slots.withKnowledgePoint(null);
+        }
         List<String> signals = IntentRuleTable.matchedStrongSignals(message);
         // 规则强信号的置信度：明确短语命中给高置信，但仍标注来源为规则，便于和 LLM 置信度区分统计
         return new RuleHit(intent, slots, 0.95, true, signals);

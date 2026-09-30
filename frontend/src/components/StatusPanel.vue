@@ -73,7 +73,7 @@
           <span class="caption-sub">点击探究</span>
         </div>
 
-        <div class="tag-cloud">
+        <div v-if="currentTags.length" class="tag-cloud">
           <button
             v-for="tag in currentTags"
             :key="tag"
@@ -85,6 +85,9 @@
             <span class="hash-sym">#</span>
             <span class="tag-name">{{ tag.replace('#', '') }}</span>
           </button>
+        </div>
+        <div v-else class="empty-tag-tip">
+          <span>💡 提出具体学科或技术问题即可在此点亮考点</span>
         </div>
       </section>
 
@@ -257,7 +260,7 @@ const activeTopicLabel = computed(() => {
   if (tags && tags.length) {
     return tags[0].replace('#', '')
   }
-  return '集合与并发'
+  return '智能伴学'
 })
 
 // ---------- 动态随堂考点闪卡 (Flashcard) ----------
@@ -306,14 +309,26 @@ const activeFlashcard = computed(() => {
     }
   }
 
-  // 默认知识闪卡
+  if (recentText.includes('Go') || recentText.includes('GMP') || recentText.includes('Goroutine') || recentText.includes('Channel')) {
+    return {
+      title: 'Go 语言高并发实战研习档案',
+      level: '云原生高并发考点 · 核心',
+      points: [
+        { label: '调度模型', value: 'GMP 协程调度（M系统线程/P逻辑处理器/G协程）' },
+        { label: '通信哲学', value: 'Don\'t communicate by sharing memory, share memory by communicating' },
+        { label: '安全防坑', value: '注意 Channel 读写关闭与死锁检测' }
+      ]
+    }
+  }
+
+  // 默认知识闪卡：全学科自适应通用伴学空间
   return {
-    title: 'Java 核心技术研习档案',
-    level: '转码自适应教学模式',
+    title: '智能伴学 · 综合研习空间',
+    level: '全学科多智能体导学',
     points: [
-      { label: '研思方向', value: '注重底层原理、工业级实现与高频面试设计' },
-      { label: '学习建议', value: '结合工程实践，边讨论原理边通过右侧现场出题' },
-      { label: '助教就绪', value: '随时在左侧提问，本卡片将随探讨知识自动更新' }
+      { label: '研思方向', value: '支持技术原理探究、代码实战、架构设计与学情摸底' },
+      { label: '学习建议', value: '可随时提出具体学科问题，或点击指令舱进行定向测验' },
+      { label: '助教就绪', value: '随堂考点卡片将根据会话深入实时自适应动态萃取' }
     ]
   }
 })
@@ -324,6 +339,7 @@ const CANDIDATE_KEYWORDS = [
   '多线程', '并发安全', '线程池', 'CAS', 'synchronized', 'AQS',
   'JVM', '垃圾回收', '双亲委派', 'Spring', 'SpringBoot', 'IOC', 'AOP',
   'MySQL', 'B+树索引', '事务隔离', 'MVCC', 'Redis', '分布式锁', '缓存击穿',
+  'Go', 'Goroutine', 'Channel', 'GMP调度', 'Python', 'Docker', 'Kubernetes',
   '两数之和', '链表反转'
 ]
 
@@ -348,7 +364,7 @@ const currentTags = computed(() => {
   }
 
   if (found.size === 0) {
-    return ['#HashMap原理', '#红黑树平衡', '#并发线程安全', '#Java核心集合']
+    return []
   }
   return Array.from(found).slice(0, 4)
 })
@@ -361,7 +377,12 @@ function queryTag(tag) {
 // ---------- 快捷指令 ----------
 function triggerShortcut(type) {
   if (type === 'exercise') {
-    send('请针对我们刚才讨论的核心知识点，出一道经典的大厂面试真题考考我，包含代码片段与选项')
+    if (currentTags.value && currentTags.value.length > 0) {
+      const topic = currentTags.value[0].replace('#', '')
+      send(`请针对「${topic}」核心考点，出一道经典考题考考我，包含代码片段与选项`)
+    } else {
+      send('请帮我出一道考题检验一下技术掌握情况')
+    }
   } else if (type === 'mindmap') {
     send('请帮我把刚才讨论的技术要点提炼成结构清晰的思维导图和核心对比总结')
   } else if (type === 'summary') {
@@ -664,6 +685,12 @@ const gradeHint = computed(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+.empty-tag-tip {
+  font-size: 11px;
+  color: var(--text-3);
+  padding: 6px 2px;
+  line-height: 1.4;
 }
 .tag-capsule {
   display: inline-flex;
