@@ -78,15 +78,15 @@ tutor:
     recall-candidates: 15
     rerank-top-n: 5
     route:
-      llm-confidence-threshold: 0.75
+      llm-confidence-threshold: 0.4
       # L0 规则快路径：强信号零歧义请求免 LLM 直路由（拿不准自动放行 LLM，不会误判）
       fast-path-enabled: true
       # false=只让规则与 LLM 互证、不短路（用于开/关快路径 A/B 对比延迟与准确率）
       fast-path-shortcut-enabled: true
       # 规则与 LLM 意图一致时的置信度互证增益
       mutual-confidence-boost: 0.15
-      # 低置信迟滞：会话内连续 N 次低置信且无规则互证才澄清（2=两次才反问，单次抖动放行防打扰）
-      low-conf-streak-threshold: 2
+      # 低置信迟滞：会话内连续 N 次低置信且无规则互证才澄清（1=一次即澄清，与旧行为一致）
+      low-conf-streak-threshold: 1
       # 置信度校准（默认关；开启需先用离线评测产出 data/confidence-calibration.json 分桶表）
       calibration-enabled: false
       calibration-file: ./data/confidence-calibration.json
